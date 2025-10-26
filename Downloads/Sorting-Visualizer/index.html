@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Sorting Visualizer - Interactive Algorithm Demonstration</title>
+    <meta name="description" content="Explore and visualize sorting algorithms like Bubble Sort, Quick Sort, and Merge Sort with interactive controls. Perfect for learning and understanding data structures." />
+    <meta name="keywords" content="sorting visualizer, algorithms, bubble sort, quick sort, merge sort, data structures, interactive learning" />
+    <meta name="author" content="PDN237" />
+    <meta name="robots" content="index, follow" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+    <header>
+        <div class="controls">
+            <div class="control-group">
+                <label for="numElements">Elements</label>
+                <input type="number" id="numElements" min="5" max="100" value="30" />
+            </div>
+
+            <div class="control-group">
+                <label for="sortType">Algorithm</label>
+                <select id="sortType">
+                    <option value="bubble">Bubble Sort</option>
+                    <option value="selection">Selection Sort</option>
+                    <option value="insertion">Insertion Sort</option>
+                    <option value="quick">Quick Sort</option>
+                    <option value="merge">Merge Sort</option>
+                </select>
+            </div>
+
+            <div class="control-group">
+                <label for="speed">Speed</label>
+                <select id="speed">
+                    <option value="0.25">0.25x</option>
+                    <option value="0.5">0.5x</option>
+                    <option value="1" selected>1x</option>
+                    <option value="2">2x</option>
+                    <option value="4">4x</option>
+                </select>
+            </div>
+
+            <div class="control-group">
+                <label for="visualizationMode">Visualization</label>
+                <select id="visualizationMode">
+                    <option value="boxes" selected>Boxes</option>
+                    <option value="bars">Bars</option>
+                    <option value="sized-boxes">Sized Boxes</option>
+                </select>
+            </div>
+
+            <div class="control-group">
+                <label>&nbsp;</label>
+                <button id="sortBtn">Sort</button>
+            </div>
+
+            <div class="control-group">
+                <label>&nbsp;</label>
+                <button id="randomizeBtn">Randomize</button>
+            </div>
+        </div>
+    </header>
+    <main id="mainContainer">
+        <!-- Boxes with numbers will be generated here -->
+    </main>
+    <section id="algorithmDescription">
+        <h2>Algorithm Description</h2>
+        <p id="description"></p>
+        <h3>Code Implementations</h3>
+        <div id="codeSnippets"></div>
+        <h3>Code Editor</h3>
+        <div class="code-editor-container">
+            <textarea id="codeEditor" placeholder="Write your sorting algorithm here..."></textarea>
+        </div>
+    </section>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-c.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-csharp.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-java.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-javascript.min.js"></script>
+    <script src="js/sort.js"></script>
+    <script src="js/app.js"></script>
+    <footer>
+        <div class="footer-content">
+            <div class="footer-decoration">
+                <div class="decoration-line"></div>
+                <div class="decoration-dot"></div>
+                <div class="decoration-line"></div>
+            </div>
+            <div class="footer-text">
+                <p>Built with MN-Team by <a href="https://github.com/PDN237" target="_blank" rel="noopener noreferrer">PDN237</a></p>
+                <p class="footer-subtitle">Interactive Sorting Algorithm Visualizer</p>
+            </div>
+            <div class="footer-decoration">
+                <div class="decoration-line"></div>
+                <div class="decoration-dot"></div>
+                <div class="decoration-line"></div>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>
