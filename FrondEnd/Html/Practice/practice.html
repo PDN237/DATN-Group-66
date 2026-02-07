@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<title>Practice</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/FrondEnd/Style/practice.css">
+</head>
+<body>
+
+    
+<header>
+  <h1>COURSES</h1>
+  <div class="search-box">
+    <input placeholder="Tìm khóa học..." />
+  </div>
+</header>
+
+<div class="container">
+
+<!-- LIST PAGE -->
+<div id="courseListPage">
+
+<div class="filter-bar">
+<select>
+<option>Tất cả</option>
+<option>Cơ bản</option>
+<option>Trung cấp</option>
+<option>Nâng cao</option>
+</select>
+<button>Gợi Ý</button>
+</div>
+
+<div class="course-grid">
+
+<div class="course-card" onclick="openDetail('Bubble Sort')">
+<img class="course-img" src="https://images.unsplash.com/photo-1555949963-aa79dcee981c">
+<h3>Bubble Sort</h3>
+<p>Sắp xếp cơ bản cho người mới.</p>
+<span class="badge">Cơ bản</span>
+</div>
+
+<div class="course-card" onclick="openDetail('Selection Sort')">
+<img class="course-img" src="https://images.unsplash.com/photo-1518770660439-4636190af475">
+<h3>Selection Sort</h3>
+<p>Chọn phần tử nhỏ nhất.</p>
+<span class="badge">Cơ bản</span>
+</div>
+
+<div class="course-card" onclick="openDetail('Merge Sort')">
+<img class="course-img" src="https://images.unsplash.com/photo-1504639725590-34d0984388bd">
+<h3>Merge Sort</h3>
+<p>Chia để trị.</p>
+<span class="badge">Trung cấp</span>
+</div>
+
+<div class="course-card" onclick="openDetail('Quick Sort')">
+<img class="course-img" src="https://images.unsplash.com/photo-1515879218367-8466d910aaa4">
+<h3>Quick Sort</h3>
+<p>Sắp xếp nhanh.</p>
+<span class="badge">Trung cấp</span>
+</div>
+
+<div class="course-card" onclick="openDetail('Dijkstra')">
+<img class="course-img" src="https://images.unsplash.com/photo-1526378722484-cc5c510f75c7">
+<h3>Dijkstra</h3>
+<p>Tìm đường đi ngắn nhất.</p>
+<span class="badge">Nâng cao</span>
+</div>
+
+</div>
+</div>
+
+<!-- DETAIL PAGE -->
+<div class="detail-page" id="detailPage">
+<button class="back-btn" onclick="backToList()">← Quay lại</button>
+
+<div class="section">
+<h2 id="algoTitle">Giới thiệu</h2>
+<p>Thuật toán dùng để giải quyết bài toán tối ưu dữ liệu.</p>
+</div>
+
+<div class="section">
+<h2>Video Bài Giảng</h2>
+<div class="video-box">VIDEO PLAYER</div>
+</div>
+
+<div class="section">
+<h2>Code Mẫu</h2>
+<div class="code-box">for(i=0;i&lt;n;i++){...}</div>
+</div>
+
+<div class="section">
+<h2>Độ Phức Tạp</h2>
+<div class="complexity-grid">
+<div class="complexity-item">Best O(n)</div>
+<div class="complexity-item">Avg O(n²)</div>
+<div class="complexity-item">Worst O(n²)</div>
+<div class="complexity-item">Space O(1)</div>
+</div>
+</div>
+
+<div class="section">
+<h2>Bài Tập Thực Hành</h2>
+<p>Viết lại thuật toán bằng JS hoặc C#.</p>
+</div>
+
+<div class="section">
+<h2>Comment</h2>
+<textarea placeholder="Nhập nhận xét..."></textarea>
+<button class="btn">Gửi</button>
+</div>
+
+</div>
+
+</div>
+
+<script>
+function openDetail(name){
+ document.getElementById('courseListPage').style.display='none';
+ document.getElementById('detailPage').style.display='block';
+ document.getElementById('algoTitle').innerText=name + ' - Giới thiệu';
+}
+
+function backToList(){
+ document.getElementById('courseListPage').style.display='block';
+ document.getElementById('detailPage').style.display='none';
+}
+</script>
+
+</body>
+</html>
