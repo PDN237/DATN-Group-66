@@ -16,17 +16,20 @@
                 </div>
             </div>
 
-            <div class="login-form">
+            <form class="login-form" id ="registerForm">
                 <h2>Register</h2>
                 
                 <div class="input-group">
                     <i class="fa-solid fa-user"></i>
-                    <input type="text" placeholder="Full Name">
+                    <!-- <input type="text" placeholder="Full Name"> -->
+                     <input type="text" id="fullName" placeholder="Full Name">
+
                 </div>
 
                 <div class="input-group">
                     <i class="fa-solid fa-envelope"></i>
-                    <input type="email" placeholder="Email">
+                    <!-- <input type="email" placeholder="Email"> -->
+                     <input type="email" id="email" placeholder="Email">
                 </div>
 
                 <div class="input-group">
@@ -41,7 +44,9 @@
                     <i class="fa-solid fa-eye-slash toggle-password" onclick="togglePass('confirm-pass', this)"></i>
                 </div>
 
-                <button class="btn-login">SIGN UP</button>
+             <button type="submit" class="btn-login">SIGN UP</button>
+
+
 
                 <div class="social-login">
                     <p>Or login with</p>
@@ -55,10 +60,12 @@
                 <div class="create-account">
                     <a href="login.html"><i class="fa-solid fa-arrow-left"></i> Back to Login</a>
                 </div>
-            </div>
+            </form>
         </div>
     </div>
+    <div id="toast" class="toast"></div>
 
     <script src="/FrondEnd/Html/Login/script.js"></script>
+    <script src="/FrondEnd/Html/Login/register.js"></script>
 </body>
 </html>

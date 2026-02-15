@@ -1,15 +1,16 @@
-const togglePassword = document.querySelector('#togglePassword');
-const passwordInput = document.querySelector('input[type="password"]');
+// const togglePassword = document.querySelector('#togglePassword');
+// const passwordInput = document.querySelector('input[type="password"]');
 
-togglePassword.addEventListener('click', function () {
-    // Chuyển đổi qua lại giữa 'password' và 'text'
-    const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
-    passwordInput.setAttribute('type', type);
+// togglePassword.addEventListener('click', function () {
+//     // Chuyển đổi qua lại giữa 'password' và 'text'
+//     const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+//     passwordInput.setAttribute('type', type);
     
-    // Đổi icon con mắt
-    this.classList.toggle('fa-eye');
-    this.classList.toggle('fa-eye-slash');
-});
+//     // Đổi icon con mắt
+//     this.classList.toggle('fa-eye');
+//     this.classList.toggle('fa-eye-slash');
+// });
+// Thanh Phong 4/2/2026 lỗi hiệu ứng 
 
 function togglePass(inputId, icon) {
     const passwordInput = document.getElementById(inputId);
@@ -24,3 +25,4 @@ function togglePass(inputId, icon) {
         icon.classList.add('fa-eye-slash');
     }
 }
+
