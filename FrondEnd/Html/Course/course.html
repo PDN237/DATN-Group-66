@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<title>Tạo Khóa Học</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0;font-family:Poppins,sans-serif;}
+
+body{
+  background:radial-gradient(circle at top,#1b1f3b,#0c1022);
+  color:#e5e7ff;
+}
+
+/* HEADER */
+header{
+  padding:20px 40px;
+  border-bottom:1px solid rgba(0,255,200,0.15);
+  background:linear-gradient(90deg,#0f172a,#111c3a);
+}
+header h1{color:#a78bfa}
+
+/* LAYOUT */
+.container{
+  display:grid;
+  grid-template-columns: 1fr 1.2fr;
+  gap:30px;
+  padding:30px 40px;
+}
+
+/* CARD */
+.card{
+  background:linear-gradient(160deg,#111827,#0b1228);
+  border-radius:18px;
+  padding:24px;
+  border:1px solid rgba(0,255,200,0.12);
+  box-shadow:0 0 25px rgba(0,255,200,0.05);
+}
+
+.card h2{
+  color:#22d3ee;
+  margin-bottom:16px;
+}
+
+/* INPUT */
+.input-group{margin-bottom:18px;}
+label{font-size:14px;color:#94f3ff;margin-bottom:6px;display:block;}
+
+input,textarea{
+  width:100%;
+  padding:12px;
+  border-radius:12px;
+  background:#020617;
+  border:1px solid rgba(34,211,238,0.25);
+  color:white;
+}
+
+textarea{height:90px;resize:none}
+
+/* THUMBNAIL */
+.thumb-preview{
+  width:100%;
+  height:180px;
+  border-radius:14px;
+  border:1px dashed rgba(34,211,238,0.4);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  color:#22d3ee;
+  margin-top:10px;
+  overflow:hidden;
+}
+.thumb-preview img{width:100%;height:100%;object-fit:cover}
+
+/* BUTTON */
+.btn{
+  padding:10px 18px;
+  border:none;
+  border-radius:12px;
+  cursor:pointer;
+  font-weight:600;
+  background:linear-gradient(135deg,#10b981,#22d3ee);
+  color:#021012;
+}
+
+.btn-red{
+  background:linear-gradient(135deg,#ef4444,#f97316);
+  color:white;
+}
+
+/* LIST */
+.list-box{margin-top:14px;}
+.item{
+  background:#020617;
+  padding:14px;
+  border-radius:12px;
+  border:1px solid rgba(34,211,238,0.25);
+  margin-bottom:10px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+
+/* PROGRESS */
+.progress{
+  height:10px;
+  background:#020617;
+  border-radius:20px;
+  overflow:hidden;
+  margin-top:10px;
+}
+.progress-bar{
+  height:100%;
+  width:60%;
+  background:linear-gradient(90deg,#10b981,#22d3ee);
+}
+
+/* RIGHT PANEL */
+.section-title{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:10px;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <h1>Tạo Khóa Học Mới</h1>
+</header>
+
+<div class="container">
+
+<!-- LEFT -->
+<div class="card">
+<h2>Thông Tin Khóa Học</h2>
+
+<div class="input-group">
+<label>Tên Khóa Học</label>
+<input placeholder="VD: Thuật Toán JavaScript">
+</div>
+
+<div class="input-group">
+<label>Mô Tả</label>
+<textarea placeholder="Giới thiệu khóa học..."></textarea>
+</div>
+
+<div class="input-group">
+<label>Thumbnail</label>
+<input type="file" onchange="previewImg(event)">
+<div class="thumb-preview" id="preview">Ảnh xem trước</div>
+</div>
+
+<h3>Tiến Độ Nội Dung</h3>
+<div class="progress"><div class="progress-bar"></div></div>
+
+<br>
+<button class="btn" style="width:100%">LƯU KHÓA HỌC</button>
+</div>
+
+<!-- RIGHT -->
+<div>
+
+<!-- VIDEO -->
+<div class="card">
+<div class="section-title">
+<h2>Video Bài Giảng</h2>
+<button class="btn" onclick="addItem('videoList','🎬 Video mới')">+ Thêm</button>
+</div>
+<div class="list-box" id="videoList"></div>
+</div>
+
+<!-- TÀI LIỆU -->
+<div class="card">
+<div class="section-title">
+<h2>Tài Liệu</h2>
+<button class="btn" onclick="addItem('docList','📄 Tài liệu')">+ Thêm</button>
+</div>
+<div class="list-box" id="docList"></div>
+</div>
+
+<!-- LESSON -->
+<div class="card">
+<div class="section-title">
+<h2>Bài Học</h2>
+<button class="btn" onclick="addItem('lessonList','📘 Bài học')">+ Thêm</button>
+</div>
+<div class="list-box" id="lessonList"></div>
+</div>
+
+</div>
+
+</div>
+
+<script>
+function previewImg(e){
+  let img = document.createElement("img");
+  img.src = URL.createObjectURL(e.target.files[0]);
+  let box = document.getElementById("preview");
+  box.innerHTML="";
+  box.appendChild(img);
+}
+
+function addItem(listId,text){
+  let box = document.getElementById(listId);
+  box.innerHTML += `
+    <div class="item">
+      ${text}
+      <button class="btn btn-red" onclick="this.parentElement.remove()">Xóa</button>
+    </div>`;
+}
+</script>
+
+</body>
+</html>
