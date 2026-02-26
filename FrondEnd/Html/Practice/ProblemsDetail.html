@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Two Sum - LeetCode</title>
+    <title>Problem Detail</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="../Style/ProblemsDetail.css">
+    <link rel="stylesheet" href="/FrondEnd/Style/ProblemsDetail.css">
 </head>
 <body>
     <!-- Header with Navigation -->
@@ -30,10 +30,10 @@
         <!-- Problem Title Bar -->
         <div class="problem-header">
             <div class="problem-title-section">
-                <h1>1. Two Sum</h1>
+                <h1 id="problemTitle">Loading...</h1>
                 <div class="problem-meta">
-                    <span class="difficulty easy">Easy</span>
-                    <span class="acceptance">49.2% Acceptance</span>
+                    <span id="problemDifficulty" class="difficulty easy">-</span>
+                    <span class="acceptance" id="problemAcceptance">-</span>
                 </div>
             </div>
             <div class="problem-actions">
@@ -48,41 +48,28 @@
             <div class="problem-description-panel">
                 <div class="description-content">
                     <h2>Description</h2>
-                    <p>Given an array of integers <code>nums</code> and an integer <code>target</code>, return <em>indices of the two numbers such that they add up to <code>target</code></em>.</p>
-                    <p>You may assume that each input would have <strong>exactly one solution</strong>, and you may not use the <em>same</em> element twice.</p>
-                    <p>You can return the answer in any order.</p>
+                    <div id="problemDescription">
+                        <p>Loading problem details...</p>
+                    </div>
 
-                    <h3>Example 1:</h3>
-                    <pre><code><strong>Input:</strong> nums = [2,7,11,15], target = 9
-<strong>Output:</strong> [0,1]
-<strong>Explanation:</strong> Because nums[0] + nums[1] == 9, we return [0, 1].</code></pre>
+                    <!-- Examples Section -->
+                    <div id="examplesSection" style="display: none; margin-top: 20px;">
+                        <h3>Examples</h3>
+                        <div id="problemExamples" class="examples-container"></div>
+                    </div>
 
-                    <h3>Example 2:</h3>
-                    <pre><code><strong>Input:</strong> nums = [3,2,4], target = 6
-<strong>Output:</strong> [1,2]</code></pre>
-
-                    <h3>Example 3:</h3>
-                    <pre><code><strong>Input:</strong> nums = [3,3], target = 6
-<strong>Output:</strong> [0,1]</code></pre>
-
-                    <h3>Constraints:</h3>
-                    <ul>
-                        <li>2 ≤ nums.length ≤ 10<sup>4</sup></li>
-                        <li>-10<sup>9</sup> ≤ nums[i] ≤ 10<sup>9</sup></li>
-                        <li>-10<sup>9</sup> ≤ target ≤ 10<sup>9</sup></li>
-                        <li>Only one valid answer exists.</li>
-                    </ul>
-
-                    <h3>Follow-up:</h3>
-                    <p>Can you come up with an algorithm that is less than O(n<sup>2</sup>) time complexity?</p>
+                    <!-- Hints Section -->
+                    <div id="hintsSection" style="display: none; margin-top: 20px;">
+                        <h3>Hints</h3>
+                        <div id="problemHints" class="hints-container"></div>
+                    </div>
                 </div>
 
                 <!-- Topics Tags -->
                 <div class="topics-section">
                     <h3>Related Topics</h3>
-                    <div class="topics-tags">
-                        <span class="topic-tag">Array</span>
-                        <span class="topic-tag">Hash Table</span>
+                    <div class="topics-tags" id="problemTopics">
+                        <span class="topic-tag">-</span>
                     </div>
                 </div>
             </div>
@@ -103,12 +90,13 @@
                     <div class="line-numbers">
                         <span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span><span>10</span><span>11</span><span>12</span><span>13</span><span>14</span><span>15</span>
                     </div>
-                    <textarea id="codeArea" spellcheck="false">/**
+                    <textarea id="codeArea" spellcheck="false">
+/**
  * @param {number[]} nums
  * @param {number} target
  * @return {number[]}
  */
-var twoSum = function(nums, target) {
+var solution = function(nums, target) {
     // Your code here
     
 };</textarea>
@@ -219,49 +207,219 @@ var twoSum = function(nums, target) {
             });
         });
 
+        // Get problem ID from URL
+        function getProblemId() {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get('id');
+        }
+
+        // Fetch problem details from API
+        async function fetchProblemDetail() {
+            const problemId = getProblemId();
+            
+            if (!problemId) {
+                document.getElementById('problemTitle').textContent = 'Problem not found';
+                return;
+            }
+
+            try {
+                const response = await fetch(`http://localhost:3000/api/problems/${problemId}`);
+                const result = await response.json();
+                
+                if (result.success) {
+                    displayProblem(result.data);
+                } else {
+                    console.error('Error:', result.message);
+                    document.getElementById('problemTitle').textContent = 'Problem not found';
+                }
+            } catch (error) {
+                console.error('Error fetching problem:', error);
+                document.getElementById('problemTitle').textContent = 'Error loading problem';
+            }
+        }
+
+        // Parse and display hints (collapsible)
+        function displayHints(hints) {
+            if (!hints) return;
+            
+            const hintsSection = document.getElementById('hintsSection');
+            const hintsContainer = document.getElementById('problemHints');
+            
+            // Split by comma and create collapsible cards
+            const hintsArray = hints.split(',').map(h => h.trim()).filter(h => h);
+            
+            if (hintsArray.length > 0) {
+                hintsSection.style.display = 'block';
+                hintsContainer.innerHTML = hintsArray.map((hint, index) => `
+                    <div class="hint-card">
+                        <div class="hint-header" onclick="toggleHint(${index})">
+                            <span class="hint-number">${index + 1}</span>
+                            <span class="hint-title">Gợi ý ${index + 1}</span>
+                            <i class="fas fa-chevron-down hint-icon"></i>
+                        </div>
+                        <div class="hint-content" id="hint-${index}">
+                            <span class="hint-text">${hint}</span>
+                        </div>
+                    </div>
+                `).join('');
+            }
+        }
+
+        // Toggle hint visibility
+        function toggleHint(index) {
+            const content = document.getElementById(`hint-${index}`);
+            const header = content.previousElementSibling;
+            const icon = header.querySelector('.hint-icon');
+            
+            if (content.style.maxHeight) {
+                content.style.maxHeight = null;
+                header.classList.remove('active');
+                icon.classList.remove('fa-chevron-up');
+                icon.classList.add('fa-chevron-down');
+            } else {
+                content.style.maxHeight = content.scrollHeight + "px";
+                header.classList.add('active');
+                icon.classList.remove('fa-chevron-down');
+                icon.classList.add('fa-chevron-up');
+            }
+        }
+
+        // Parse and display examples
+        function displayExamples(examples) {
+            if (!examples) return;
+            
+            const examplesSection = document.getElementById('examplesSection');
+            const examplesContainer = document.getElementById('problemExamples');
+            
+            // Split by comma to get individual examples
+            const examplesArray = examples.split(',').map(e => e.trim()).filter(e => e);
+            
+            if (examplesArray.length > 0) {
+                examplesSection.style.display = 'block';
+                examplesContainer.innerHTML = examplesArray.map((example, index) => {
+                    // Replace " - " with newline for Input/Output separation
+                    const formattedExample = example.replace(/\s*-\s*/g, '<br>');
+                    return `
+                        <div class="example-card">
+                            <div class="example-header">Example ${index + 1}</div>
+                            <div class="example-content">${formattedExample}</div>
+                        </div>
+                    `;
+                }).join('');
+            }
+        }
+
+        // Display problem details
+        function displayProblem(problem) {
+            // Update title
+            document.getElementById('problemTitle').textContent = `${problem.id}. ${problem.title}`;
+            document.title = `${problem.title} - Problem`;
+
+            // Update difficulty
+            const difficultyEl = document.getElementById('problemDifficulty');
+            difficultyEl.textContent = problem.difficulty;
+            difficultyEl.className = `difficulty ${problem.difficulty.toLowerCase()}`;
+
+            // Update description
+            const descEl = document.getElementById('problemDescription');
+            if (problem.description) {
+                descEl.innerHTML = problem.description;
+            } else {
+                descEl.innerHTML = '<p>No description available.</p>';
+            }
+
+            // Update examples first
+            if (problem.examples) {
+                displayExamples(problem.examples);
+            }
+
+            // Update hints
+            if (problem.hints) {
+                displayHints(problem.hints);
+            }
+
+            // Update topics (if available)
+            const topicsEl = document.getElementById('problemTopics');
+            if (problem.topics) {
+                const topics = problem.topics.split(',').map(t => t.trim());
+                topicsEl.innerHTML = topics.map(topic => 
+                    `<span class="topic-tag">${topic}</span>`
+                ).join('');
+            }
+
+            // Update code template based on problem title
+            updateCodeTemplate(problem.title);
+        }
+
         // Code templates for different languages
         const codeTemplates = {
-            javascript: `/**
+            javascript: (title) => {
+                const funcName = title.toLowerCase().replace(/\s+/g, '');
+                return `/**
  * @param {number[]} nums
  * @param {number} target
  * @return {number[]}
  */
-var twoSum = function(nums, target) {
+var ${funcName} = function(nums, target) {
     // Your code here
     
-};`,
-            python: `class Solution:
-    def twoSum(self, nums: List[int], target: int) -> List[int]:
+};`;
+            },
+            python: (title) => {
+                return `class Solution:
+    def ${title.toLowerCase().replace(/\s+/g, '_')}(self, nums: List[int], target: int) -> List[int]:
         # Your code here
-        pass`,
-            java: `class Solution {
-    public int[] twoSum(int[] nums, int target) {
+        pass`;
+            },
+            java: (title) => {
+                return `class Solution {
+    public int[] ${title.toLowerCase().replace(/\s+/g, '')}(int[] nums, int target) {
         // Your code here
         
     }
-}`,
-            cpp: `class Solution {
+}`;
+            },
+            cpp: (title) => {
+                return `class Solution {
 public:
-    vector<int> twoSum(vector<int>& nums, int target) {
+    vector<int> ${title.toLowerCase().replace(/\s+/g, '')}(vector<int>& nums, int target) {
         // Your code here
         
     }
-};`,
-            csharp: `public class Solution {
-    public int[] TwoSum(int[] nums, int target) {
+};`;
+            },
+            csharp: (title) => {
+                return `public class Solution {
+    public int[] ${title.toLowerCase().replace(/\s+/g, '')}(int[] nums, int target) {
         // Your code here
         
     }
-}`
+}`;
+            }
         };
 
         // Update code area when language changes
         langTabs.forEach(tab => {
             tab.addEventListener('click', () => {
                 const lang = tab.dataset.lang;
-                document.getElementById('codeArea').value = codeTemplates[lang];
+                const title = document.getElementById('problemTitle').textContent.replace(/^\d+\.\s*/, '');
+                if (codeTemplates[lang]) {
+                    document.getElementById('codeArea').value = codeTemplates[lang](title);
+                }
             });
         });
+
+        // Initialize code template
+        function updateCodeTemplate(title) {
+            const activeTab = document.querySelector('.lang-tab.active');
+            const lang = activeTab ? activeTab.dataset.lang : 'javascript';
+            if (codeTemplates[lang]) {
+                document.getElementById('codeArea').value = codeTemplates[lang](title);
+            }
+        }
+
+        // Load problem when page loads
+        document.addEventListener('DOMContentLoaded', fetchProblemDetail);
     </script>
 </body>
 </html>

@@ -1,32 +1,76 @@
 const sql = require('mssql');
-require('dotenv').config();
 
+// SQL Server configuration - Using SQL Server Authentication
 const config = {
-  user: process.env.DB_USER,
-  password: process.env.DB_PASSWORD,
-  server: process.env.DB_SERVER,
-  database: process.env.DB_DATABASE,
-  port: parseInt(process.env.DB_PORT, 10),
+  server: 'DESKTOP-GCTEUK8',
+  database: 'DATN',
+  user: 'DATN',
+  password: '1234',
   options: {
-    encrypt: false,
-    trustServerCertificate: true
-  },
-  pool: {
-    max: 10,
-    min: 0,
-    idleTimeoutMillis: 30000
+    encrypt: true,
+    trustServerCertificate: true,
+    enableArithAbort: true
   }
 };
 
-const poolPromise = new sql.ConnectionPool(config)
-  .connect()
+// Create connection pool - export as poolPromise for compatibility with controllers
+const poolPromise = sql.connect(config)
   .then(pool => {
-    console.log('✅ Kết nối SQL Server thành công → Database:', config.database);
+    console.log('✅ Kết nối SQL Server thành công!');
     return pool;
   })
   .catch(err => {
-    console.error('❌ Kết nối database thất bại:', err.originalError?.message || err.message);
-    process.exit(1);
+    console.error('❌ Lỗi kết nối SQL Server:', err.message);
+    throw err;
   });
 
-module.exports = { sql, poolPromise };
+// Function to get connection pool
+async function getConnection() {
+  try {
+    return await poolPromise;
+  } catch (err) {
+    console.error('❌ Lỗi kết nối SQL Server:', err.message);
+    throw err;
+  }
+}
+
+// Function to execute query
+async function executeQuery(query, params = []) {
+  try {
+    const pool = await getConnection();
+    const request = pool.request();
+    
+    // Add parameters if provided
+    for (let i = 0; i < params.length; i++) {
+      request.input(`param${i}`, params[i].type, params[i].value);
+    }
+    
+    const result = await request.query(query);
+    return result.recordset;
+  } catch (err) {
+    console.error('❌ Lỗi thực thi query:', err.message);
+    throw err;
+  }
+}
+
+// Function to close connection
+async function closeConnection() {
+  try {
+    const pool = await poolPromise;
+    if (pool) {
+      await pool.close();
+      console.log('✅ Đóng kết nối SQL Server thành công!');
+    }
+  } catch (err) {
+    console.error('❌ Lỗi đóng kết nối:', err.message);
+  }
+}
+
+// Export functions and sql
+module.exports = {
+  poolPromise,
+  getConnection,
+  executeQuery,
+  closeConnection,
+  sql
+};

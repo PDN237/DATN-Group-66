@@ -1,17 +1,24 @@
 const express = require('express');
 const cors = require('cors');
+const path = require('path');
 const authRoute = require('./auth.route');
+const problemsRoute = require('./problems.route');
 
 const app = express();
 
 app.use(cors());
 app.use(express.json());
 
-app.use('/api/auth', authRoute);
+// Serve static files from FrondEnd directory
+app.use(express.static(path.join(__dirname, '../FrondEnd')));
 
-// Test route
+// API routes
+app.use('/api/auth', authRoute);
+app.use('/api/problems', problemsRoute);
+
+// Serve index.html for root route
 app.get('/', (req, res) => {
-  res.json({ message: 'Server đang chạy!' });
+  res.sendFile(path.join(__dirname, '../FrondEnd/Index.html'));
 });
 
 const PORT = process.env.PORT || 3000;
