@@ -1,219 +1,380 @@
 <!DOCTYPE html>
 <html lang="vi">
-<head>
-<meta charset="UTF-8">
-<title>Tạo Khóa Học</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Course</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/FrondEnd/Style/course.css" />
+  </head>
 
-<style>
-*{box-sizing:border-box;margin:0;padding:0;font-family:Poppins,sans-serif;}
+  <body>
+    <header>
+      <h1>COURSES</h1>
+      <div class="search-box">
+        <input placeholder="Tìm khóa học..." />
+      </div>
+    </header>
 
-body{
-  background:radial-gradient(circle at top,#1b1f3b,#0c1022);
-  color:#e5e7ff;
-}
+    <div class="container">
+      <!-- LIST PAGE -->
+      <div id="courseListPage">
+        <div class="filter-bar">
+          <select>
+            <option>Tất cả</option>
+            <option>Cơ bản</option>
+            <option>Trung cấp</option>
+            <option>Nâng cao</option>
+          </select>
+          <button>Gợi Ý</button>
+        </div>
 
-/* HEADER */
-header{
-  padding:20px 40px;
-  border-bottom:1px solid rgba(0,255,200,0.15);
-  background:linear-gradient(90deg,#0f172a,#111c3a);
-}
-header h1{color:#a78bfa}
+        <div class="course-grid">
+          <div class="course-card" onclick="openPopup('Bubble Sort')">
+            <img
+              class="course-img"
+              src="https://images.unsplash.com/photo-1555949963-aa79dcee981c"
+            />
+            <h3>Bubble Sort</h3>
+            <p>Sắp xếp cơ bản cho người mới.</p>
+            <div class="demo-progress">
+              <div class="demo-bar"></div>
+            </div>
+            <span class="badge">Cơ bản</span>
+          </div>
 
-/* LAYOUT */
-.container{
-  display:grid;
-  grid-template-columns: 1fr 1.2fr;
-  gap:30px;
-  padding:30px 40px;
-}
+          <div class="course-card" onclick="openPopup('Selection Sort')">
+            <img
+              class="course-img"
+              src="https://images.unsplash.com/photo-1518770660439-4636190af475"
+            />
+            <h3>Selection Sort</h3>
+            <p>Chọn phần tử nhỏ nhất.</p>
+            <span class="badge">Cơ bản</span>
+          </div>
 
-/* CARD */
-.card{
-  background:linear-gradient(160deg,#111827,#0b1228);
-  border-radius:18px;
-  padding:24px;
-  border:1px solid rgba(0,255,200,0.12);
-  box-shadow:0 0 25px rgba(0,255,200,0.05);
-}
+          <div class="course-card" onclick="openPopup('Merge Sort')">
+            <img
+              class="course-img"
+              src="https://images.unsplash.com/photo-1504639725590-34d0984388bd"
+            />
+            <h3>Merge Sort</h3>
+            <p>Chia để trị.</p>
+            <span class="badge">Trung cấp</span>
+          </div>
 
-.card h2{
-  color:#22d3ee;
-  margin-bottom:16px;
-}
+          <div class="course-card" onclick="openPopupl('Quick Sort')">
+            <img
+              class="course-img"
+              src="https://images.unsplash.com/photo-1515879218367-8466d910aaa4"
+            />
+            <h3>Quick Sort</h3>
+            <p>Sắp xếp nhanh.</p>
+            <span class="badge">Trung cấp</span>
+          </div>
 
-/* INPUT */
-.input-group{margin-bottom:18px;}
-label{font-size:14px;color:#94f3ff;margin-bottom:6px;display:block;}
+          <div class="course-card" onclick="openPopup('Dijkstra')">
+            <img
+              class="course-img"
+              src="https://images.unsplash.com/photo-1526378722484-cc5c510f75c7"
+            />
+            <h3>Dijkstra</h3>
+            <p>Tìm đường đi ngắn nhất.</p>
+            <span class="badge">Nâng cao</span>
+          </div>
+        </div>
+      </div>
 
-input,textarea{
-  width:100%;
-  padding:12px;
-  border-radius:12px;
-  background:#020617;
-  border:1px solid rgba(34,211,238,0.25);
-  color:white;
-}
+      <!-- DETAIL PAGE -->
+      <div class="detail-page" id="detailPage">
+        <button class="back-btn" onclick="backToList()">← Quay lại</button>
 
-textarea{height:90px;resize:none}
+        <div class="course-detail-layout">
+          <!-- SIDEBAR -->
+          <div class="lesson-sidebar">
+            <h3>Nội dung khóa học</h3>
+            <ul>
+              <li onclick="showLesson('intro')">1. Bài học</li>
+              <li onclick="showLesson('install')">2. Cài đặt</li>
+              <li onclick="showLesson('analysis')">3. Phân tích</li>
+              <li onclick="showLesson('quiz')">4. Quiz</li>
+            </ul>
+          </div>
 
-/* THUMBNAIL */
-.thumb-preview{
-  width:100%;
-  height:180px;
-  border-radius:14px;
-  border:1px dashed rgba(34,211,238,0.4);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  color:#22d3ee;
-  margin-top:10px;
-  overflow:hidden;
-}
-.thumb-preview img{width:100%;height:100%;object-fit:cover}
+          <div class="lesson-content">
+            <!-- INTRO -->
+            <div class="lesson-section active" id="intro">
+              <div class="section">
+                <h2 id="introTitle"></h2>
 
-/* BUTTON */
-.btn{
-  padding:10px 18px;
-  border:none;
-  border-radius:12px;
-  cursor:pointer;
-  font-weight:600;
-  background:linear-gradient(135deg,#10b981,#22d3ee);
-  color:#021012;
-}
+                <div class="video-box">
+                  <video id="mainVideo" controls width="100%">
+                  </video>
+                </div>
 
-.btn-red{
-  background:linear-gradient(135deg,#ef4444,#f97316);
-  color:white;
-}
+                <div class="video-list">
+                </div>
+              </div>
+            </div>
 
-/* LIST */
-.list-box{margin-top:14px;}
-.item{
-  background:#020617;
-  padding:14px;
-  border-radius:12px;
-  border:1px solid rgba(34,211,238,0.25);
-  margin-bottom:10px;
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-}
+            <!-- INSTALL -->
+            <div class="lesson-section" id="install">
+              <div class="section">
+                <h2 id="installTitle"></h2>
+                <pre class="code-box" id="codeBox"></pre>
+              </div>
+            </div>
 
-/* PROGRESS */
-.progress{
-  height:10px;
-  background:#020617;
-  border-radius:20px;
-  overflow:hidden;
-  margin-top:10px;
-}
-.progress-bar{
-  height:100%;
-  width:60%;
-  background:linear-gradient(90deg,#10b981,#22d3ee);
-}
+            <!-- ANALYSIS -->
+            <div class="lesson-section" id="analysis">
+              <div class="section">
+                <h2 id="analysisTitle"></h2>
 
-/* RIGHT PANEL */
-.section-title{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  margin-bottom:10px;
-}
-</style>
-</head>
+                <div class="complexity-grid">
+                  <div class="complexity-item">
+                    <h3>Best</h3>
+                    <p>O(n)</p>
+                  </div>
+                  <div class="complexity-item">
+                    <h3>Average</h3>
+                    <p>O(n²)</p>
+                  </div>
+                  <div class="complexity-item">
+                    <h3>Worst</h3>
+                    <p>O(n²)</p>
+                  </div>
+                  <div class="complexity-item">
+                    <h3>Space</h3>
+                    <p>O(1)</p>
+                  </div>
+                </div>
+              </div>
+            </div>
 
-<body>
+            <!-- QUIZ -->
+            <div class="lesson-section" id="quiz">
+              <div class="section">
+                <h3 id="quizQuestion"></h3>
 
-<header>
-  <h1>Tạo Khóa Học Mới</h1>
-</header>
+                <div class="quiz-box">
+                  <h3>
+                    Độ phức tạp trung bình của Bubble Sort là?
+                  </h3>
+                  <button onclick="checkAnswer(this,false)">O(n)</button>
+                  <button onclick="checkAnswer(this,false)">O(log n)</button>
+                  <button onclick="checkAnswer(this,true)">O(n²)</button>
+                  <button onclick="checkAnswer(this,false)">O(1)</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
 
-<div class="container">
+    <!-- ACTION POPUP -->
+<div class="course-popup" id="coursePopup">
+  <div class="popup-content">
+    <button class="close-btn" onclick="closePopup()">✖</button>
+    <h3 id="popupTitle"></h3>
 
-<!-- LEFT -->
-<div class="card">
-<h2>Thông Tin Khóa Học</h2>
-
-<div class="input-group">
-<label>Tên Khóa Học</label>
-<input placeholder="VD: Thuật Toán JavaScript">
+    <button onclick="goToCourse()">📘 Vào bài học</button>
+    <button onclick="showComment()">💬 Nhận xét</button>
+    <button onclick="showProgress()">📊 Xem tiến trình</button>
+  </div>
 </div>
 
-<div class="input-group">
-<label>Mô Tả</label>
-<textarea placeholder="Giới thiệu khóa học..."></textarea>
-</div>
+    
+    <script>
+const courses = {
 
-<div class="input-group">
-<label>Thumbnail</label>
-<input type="file" onchange="previewImg(event)">
-<div class="thumb-preview" id="preview">Ảnh xem trước</div>
-</div>
+  "Bubble Sort": {
+    introTitle: "Bubble Sort – Giới thiệu",
+    installTitle: "Cài đặt Bubble Sort",
+    analysisTitle: "Phân tích Bubble Sort",
+    videos: [
+        {title:"1. Tổng quan Bubble Sort", src:"../../Video/bubble-sort.mp4"},
+        {title:"2. Cách hoạt động", src:"../../Video/bubble-sort.mp4"},
+        {title:"3. Ví dụ trực quan", src:"../../Video/bubble-sort.mp4"},
+        {title:"4. Tối ưu thuật toán", src:"../../Video/bubble-sort.mp4"},
+        ],
+    code: `function bubbleSort(arr){
+  for(let i=0;i<arr.length-1;i++){
+    for(let j=0;j<arr.length-i-1;j++){
+      if(arr[j] > arr[j+1]){
+        [arr[j],arr[j+1]]=[arr[j+1],arr[j]];
+      }
+    }
+  }
+  return arr;
+}`
+  },
 
-<h3>Tiến Độ Nội Dung</h3>
-<div class="progress"><div class="progress-bar"></div></div>
+  "Selection Sort": {
+    introTitle: "Selection Sort – Giới thiệu",
+    installTitle: "Cài đặt Selection Sort",
+    analysisTitle: "Phân tích Selection Sort",
+    videos: [
+      {title:"1. Tổng quan Selection Sort", src:"Video/selection-sort.mp4"},
+      {title:"2. Cách hoạt động", src:"Video/selection-sort.mp4"},
+      {title:"3. Ví dụ trực quan", src:"Video/selection-sort.mp4"},
+      {title:"4. Tối ưu thuật toán", src:"Video/selection-sort.mp4"},
+    ],
+    code: `function selectionSort(arr){
+  for(let i=0;i<arr.length;i++){
+    let min=i;
+    for(let j=i+1;j<arr.length;j++){
+      if(arr[j] < arr[min]) min=j;
+    }
+    [arr[i],arr[min]]=[arr[min],arr[i]];
+  }
+  return arr;
+}`
+  },
 
-<br>
-<button class="btn" style="width:100%">LƯU KHÓA HỌC</button>
-</div>
+  "Merge Sort": {
+    introTitle: "Merge Sort – Giới thiệu",
+    installTitle: "Cài đặt Merge Sort",
+    analysisTitle: "Phân tích Merge Sort",
+    videos: [
+      {title:"1. Tổng quan Merge Sort", src:"Video/merge-sort.mp4"},
+      {title:"2. Cách hoạt động", src:"Video/merge-sort.mp4"},
+      {title:"3. Ví dụ trực quan", src:"Video/merge-sort.mp4"},
+      {title:"4. Tối ưu thuật toán", src:"Video/merge-sort.mp4"},
+    ],
+    code: `function mergeSort(arr){
+  if(arr.length<=1) return arr;
+  const mid=Math.floor(arr.length/2);
+  const left=mergeSort(arr.slice(0,mid));
+  const right=mergeSort(arr.slice(mid));
+  return merge(left,right);
+}`
+  },
 
-<!-- RIGHT -->
-<div>
+  "Quick Sort": {
+    introTitle: "Quick Sort – Giới thiệu",
+    installTitle: "Cài đặt Quick Sort",
+    analysisTitle: "Phân tích Quick Sort",
+    videos: [
+      {title:"1. Tổng quan Quick Sort", src:"Video/quick-sort.mp4"},
+      {title:"2. Cách hoạt động", src:"Video/quick-sort.mp4"},
+      {title:"3. Ví dụ trực quan", src:"Video/quick-sort.mp4"},
+      {title:"4. Tối ưu thuật toán", src:"Video/quick-sort.mp4"},
+    ],
+    code: `function quickSort(arr){
+  if(arr.length<=1) return arr;
+  const pivot=arr[arr.length-1];
+  const left=arr.filter(x=>x<pivot);
+  const right=arr.filter(x=>x>pivot);
+  return [...quickSort(left),pivot,...quickSort(right)];
+}`
+  },
 
-<!-- VIDEO -->
-<div class="card">
-<div class="section-title">
-<h2>Video Bài Giảng</h2>
-<button class="btn" onclick="addItem('videoList','🎬 Video mới')">+ Thêm</button>
-</div>
-<div class="list-box" id="videoList"></div>
-</div>
+  "Dijkstra": {
+    introTitle: "Dijkstra – Giới thiệu",
+    installTitle: "Cài đặt Dijkstra",
+    analysisTitle: "Phân tích Dijkstra",
+    videos: [
+      {title:"1. Tổng quan Dijkstra", src:"Video/dijkstra.mp4"},
+      {title:"2. Cách hoạt động", src:"Video/dijkstra.mp4"},
+      {title:"3. Ví dụ trực quan", src:"Video/dijkstra.mp4"},
+      {title:"4. Ứng dụng thực tế", src:"Video/dijkstra.mp4"},
+    ],
+    code: `function dijkstra(graph,start){
+  const dist={};
+  for(let v in graph) dist[v]=Infinity;
+  dist[start]=0;
+  return dist;
+}`
+  }
 
-<!-- TÀI LIỆU -->
-<div class="card">
-<div class="section-title">
-<h2>Tài Liệu</h2>
-<button class="btn" onclick="addItem('docList','📄 Tài liệu')">+ Thêm</button>
-</div>
-<div class="list-box" id="docList"></div>
-</div>
+};
 
-<!-- LESSON -->
-<div class="card">
-<div class="section-title">
-<h2>Bài Học</h2>
-<button class="btn" onclick="addItem('lessonList','📘 Bài học')">+ Thêm</button>
-</div>
-<div class="list-box" id="lessonList"></div>
-</div>
+function openDetail(courseName){
+  document.getElementById("courseListPage").style.display="none";
+  document.getElementById("detailPage").style.display="block";
 
-</div>
+  const course=courses[courseName];
 
-</div>
+  document.getElementById("introTitle").innerText=course.introTitle;
+  document.getElementById("installTitle").innerText=course.installTitle;
+  document.getElementById("analysisTitle").innerText=course.analysisTitle;
+  document.getElementById("codeBox").innerText=course.code;
 
-<script>
-function previewImg(e){
-  let img = document.createElement("img");
-  img.src = URL.createObjectURL(e.target.files[0]);
-  let box = document.getElementById("preview");
-  box.innerHTML="";
-  box.appendChild(img);
+  // đổi video chính
+  const mainVideo=document.getElementById("mainVideo");
+  mainVideo.src=course.videos[0].src;
+
+  // render list video
+  const videoList=document.querySelector(".video-list");
+  videoList.innerHTML="";
+
+  course.videos.forEach((video,index)=>{
+    const div=document.createElement("div");
+    div.className="video-item";
+    if(index===0) div.classList.add("active-video");
+
+    div.innerText=video.title;
+    div.onclick=function(){
+      changeVideo(div,video.src);
+    };
+    videoList.appendChild(div);
+  });
+
+  showLesson("intro");
 }
 
-function addItem(listId,text){
-  let box = document.getElementById(listId);
-  box.innerHTML += `
-    <div class="item">
-      ${text}
-      <button class="btn btn-red" onclick="this.parentElement.remove()">Xóa</button>
-    </div>`;
+function backToList(){
+  document.getElementById("courseListPage").style.display="block";
+  document.getElementById("detailPage").style.display="none";
+}
+
+function showLesson(id){
+  document.querySelectorAll(".lesson-section").forEach(sec=>{
+    sec.classList.remove("active");
+  });
+  document.getElementById(id).classList.add("active");
+}
+
+function changeVideo(element,src){
+  const video=document.getElementById("mainVideo");
+  video.src=src;
+  video.load();
+  video.play();
+
+  document.querySelectorAll(".video-item").forEach(item=>{
+    item.classList.remove("active-video");
+  });
+  element.classList.add("active-video");
+}
+
+let selectedCourse = null;
+
+function openPopup(courseName){
+  selectedCourse = courseName;
+  document.getElementById("popupTitle").innerText = courseName;
+  document.getElementById("coursePopup").style.display = "flex";
+}
+
+function closePopup(){
+  document.getElementById("coursePopup").style.display = "none";
+}
+
+function goToCourse(){
+  closePopup();
+  openDetail(selectedCourse);
+}
+
+function showComment(){
+  alert("Chức năng nhận xét đang phát triển 🚀");
+}
+
+function showProgress(){
+  alert("Bạn đã hoàn thành 40% khóa học 📊");
 }
 </script>
-
-</body>
+  </body>
 </html>
