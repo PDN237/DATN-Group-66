@@ -70,7 +70,39 @@ const getProblemById = async (req, res) => {
   }
 };
 
+const getTestCasesByProblemId = async (req, res) => {
+  try {
+    const { problemId } = req.params;
+    const pool = await poolPromise;
+    
+    const result = await pool.query(`
+      SELECT 
+        id,
+        problem_id,
+        input_data,
+        expected_output,
+        is_hidden
+      FROM TestCases
+      WHERE problem_id = ${problemId}
+      ORDER BY id
+    `);
+    
+    res.json({
+      success: true,
+      data: result.recordset
+    });
+  } catch (error) {
+    console.error('Error fetching test cases:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Lỗi khi lấy dữ liệu test cases',
+      error: error.message
+    });
+  }
+};
+
 module.exports = {
   getAllProblems,
-  getProblemById
+  getProblemById,
+  getTestCasesByProblemId
 };

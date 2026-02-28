@@ -1,8 +1,11 @@
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
+require('dotenv').config();
+
 const authRoute = require('./auth.route');
 const problemsRoute = require('./problems.route');
+const submitRoute = require('./routes/submit.route');
 
 const app = express();
 
@@ -15,6 +18,7 @@ app.use(express.static(path.join(__dirname, '../FrondEnd')));
 // API routes
 app.use('/api/auth', authRoute);
 app.use('/api/problems', problemsRoute);
+app.use('/api/submit', submitRoute);
 
 // Serve index.html for root route
 app.get('/', (req, res) => {

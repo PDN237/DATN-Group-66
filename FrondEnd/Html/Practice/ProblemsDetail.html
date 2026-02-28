@@ -11,7 +11,6 @@
     <link rel="stylesheet" href="/FrondEnd/Style/ProblemsDetail.css">
 </head>
 <body>
-    <!-- Header with Navigation -->
     <header>
         <nav>
             <ul>
@@ -25,9 +24,7 @@
         </nav>
     </header>
 
-    <!-- Main Content -->
     <main class="problem-main">
-        <!-- Problem Title Bar -->
         <div class="problem-header">
             <div class="problem-title-section">
                 <h1 id="problemTitle">Loading...</h1>
@@ -42,30 +39,22 @@
             </div>
         </div>
 
-        <!-- Problem Content Grid -->
         <div class="problem-content">
-            <!-- Left Panel - Description -->
             <div class="problem-description-panel">
                 <div class="description-content">
                     <h2>Description</h2>
                     <div id="problemDescription">
                         <p>Loading problem details...</p>
                     </div>
-
-                    <!-- Examples Section -->
                     <div id="examplesSection" style="display: none; margin-top: 20px;">
                         <h3>Examples</h3>
                         <div id="problemExamples" class="examples-container"></div>
                     </div>
-
-                    <!-- Hints Section -->
                     <div id="hintsSection" style="display: none; margin-top: 20px;">
                         <h3>Hints</h3>
                         <div id="problemHints" class="hints-container"></div>
                     </div>
                 </div>
-
-                <!-- Topics Tags -->
                 <div class="topics-section">
                     <h3>Related Topics</h3>
                     <div class="topics-tags" id="problemTopics">
@@ -74,114 +63,47 @@
                 </div>
             </div>
 
-            <!-- Right Panel - Code Editor -->
             <div class="code-editor-panel">
-                <!-- Language Tabs -->
-                <div class="editor-tabs">
-                    <button class="lang-tab active" data-lang="javascript">JavaScript</button>
-                    <button class="lang-tab" data-lang="python">Python</button>
-                    <button class="lang-tab" data-lang="java">Java</button>
-                    <button class="lang-tab" data-lang="cpp">C++</button>
-                    <button class="lang-tab" data-lang="csharp">C#</button>
+                <div class="editor-header">
+                    <span class="editor-title">Python Code</span>
                 </div>
-
-                <!-- Code Editor -->
-                <div class="code-editor">
-                    <div class="line-numbers">
-                        <span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span><span>10</span><span>11</span><span>12</span><span>13</span><span>14</span><span>15</span>
+                <div class="code-editor-wrapper">
+                    <div class="line-numbers" id="lineNumbers">
+                        <span>1</span>
                     </div>
-                    <textarea id="codeArea" spellcheck="false">
-/**
- * @param {number[]} nums
- * @param {number} target
- * @return {number[]}
- */
-var solution = function(nums, target) {
-    // Your code here
-    
-};</textarea>
+                    <textarea id="codeInput" class="code-input" spellcheck="false" placeholder="Write your Python code here..."></textarea>
                 </div>
-
-                <!-- Test Cases -->
-                <div class="test-cases-section">
+                <div class="test-cases-section" id="testCasesSection">
                     <h3>Test Cases</h3>
-                    <div class="test-case">
-                        <div class="test-case-header">
-                            <span class="test-case-title">Case 1</span>
-                            <span class="test-case-status passed">Passed</span>
-                        </div>
-                        <div class="test-case-content">
-                            <div class="test-input">
-                                <span class="label">Input:</span>
-                                <code>nums = [2,7,11,15], target = 9</code>
-                            </div>
-                            <div class="test-output">
-                                <span class="label">Output:</span>
-                                <code>[0,1]</code>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="test-case">
-                        <div class="test-case-header">
-                            <span class="test-case-title">Case 2</span>
-                            <span class="test-case-status">Not Run</span>
-                        </div>
-                        <div class="test-case-content">
-                            <div class="test-input">
-                                <span class="label">Input:</span>
-                                <code>nums = [3,2,4], target = 6</code>
-                            </div>
-                            <div class="test-output">
-                                <span class="label">Expected:</span>
-                                <code>[1,2]</code>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="test-case">
-                        <div class="test-case-header">
-                            <span class="test-case-title">Case 3</span>
-                            <span class="test-case-status">Not Run</span>
-                        </div>
-                        <div class="test-case-content">
-                            <div class="test-input">
-                                <span class="label">Input:</span>
-                                <code>nums = [3,3], target = 6</code>
-                            </div>
-                            <div class="test-output">
-                                <span class="label">Expected:</span>
-                                <code>[0,1]</code>
-                            </div>
-                        </div>
+                    <div id="testCasesContainer">
+                        <div class="loading-testcases">Loading test cases...</div>
                     </div>
                 </div>
-
-                <!-- Action Buttons -->
                 <div class="editor-actions">
-                    <button class="btn btn-secondary"><i class="fas fa-play"></i> Run</button>
-                    <button class="btn btn-primary"><i class="fas fa-paper-plane"></i> Submit</button>
+                    <button class="btn btn-secondary" id="runBtn"><i class="fas fa-play"></i> Run</button>
+                    <button class="btn btn-primary" id="submitBtn"><i class="fas fa-paper-plane"></i> Submit</button>
                 </div>
-
-                <!-- Results -->
-                <div class="results-section">
+                <div class="results-section" id="resultsSection" style="display: none;">
                     <div class="results-header">
                         <span>Results</span>
+                        <span id="submissionStatus" class="status-badge"></span>
                     </div>
                     <div class="results-content">
                         <div class="result-item">
                             <span class="result-label">Runtime:</span>
-                            <span class="result-value">0 ms</span>
+                            <span class="result-value" id="runtimeValue">0 ms</span>
                         </div>
                         <div class="result-item">
                             <span class="result-label">Memory:</span>
-                            <span class="result-value">0 MB</span>
+                            <span class="result-value" id="memoryValue">0 MB</span>
                         </div>
                     </div>
+                    <div class="test-results-container" id="testResultsContainer"></div>
                 </div>
             </div>
         </div>
     </main>
 
-    <!-- Footer -->
     <footer>
         <div class="footer-content">
             <div class="footer-decoration">
@@ -198,34 +120,20 @@ var solution = function(nums, target) {
     </footer>
 
     <script>
-        // Language tabs functionality
-        const langTabs = document.querySelectorAll('.lang-tab');
-        langTabs.forEach(tab => {
-            tab.addEventListener('click', () => {
-                langTabs.forEach(t => t.classList.remove('active'));
-                tab.classList.add('active');
-            });
-        });
-
-        // Get problem ID from URL
         function getProblemId() {
             const urlParams = new URLSearchParams(window.location.search);
             return urlParams.get('id');
         }
 
-        // Fetch problem details from API
         async function fetchProblemDetail() {
             const problemId = getProblemId();
-            
             if (!problemId) {
                 document.getElementById('problemTitle').textContent = 'Problem not found';
                 return;
             }
-
             try {
                 const response = await fetch(`http://localhost:3000/api/problems/${problemId}`);
                 const result = await response.json();
-                
                 if (result.success) {
                     displayProblem(result.data);
                 } else {
@@ -238,16 +146,11 @@ var solution = function(nums, target) {
             }
         }
 
-        // Parse and display hints (collapsible)
         function displayHints(hints) {
             if (!hints) return;
-            
             const hintsSection = document.getElementById('hintsSection');
             const hintsContainer = document.getElementById('problemHints');
-            
-            // Split by comma and create collapsible cards
             const hintsArray = hints.split(',').map(h => h.trim()).filter(h => h);
-            
             if (hintsArray.length > 0) {
                 hintsSection.style.display = 'block';
                 hintsContainer.innerHTML = hintsArray.map((hint, index) => `
@@ -265,161 +168,321 @@ var solution = function(nums, target) {
             }
         }
 
-        // Toggle hint visibility
         function toggleHint(index) {
-            const content = document.getElementById(`hint-${index}`);
+            const content = document.getElementById('hint-' + index);
             const header = content.previousElementSibling;
             const icon = header.querySelector('.hint-icon');
-            
             if (content.style.maxHeight) {
                 content.style.maxHeight = null;
                 header.classList.remove('active');
                 icon.classList.remove('fa-chevron-up');
                 icon.classList.add('fa-chevron-down');
             } else {
-                content.style.maxHeight = content.scrollHeight + "px";
+                content.style.maxHeight = content.scrollHeight + 'px';
                 header.classList.add('active');
                 icon.classList.remove('fa-chevron-down');
                 icon.classList.add('fa-chevron-up');
             }
         }
 
-        // Parse and display examples
         function displayExamples(examples) {
             if (!examples) return;
-            
             const examplesSection = document.getElementById('examplesSection');
             const examplesContainer = document.getElementById('problemExamples');
-            
-            // Split by comma to get individual examples
             const examplesArray = examples.split(',').map(e => e.trim()).filter(e => e);
-            
             if (examplesArray.length > 0) {
                 examplesSection.style.display = 'block';
                 examplesContainer.innerHTML = examplesArray.map((example, index) => {
-                    // Replace " - " with newline for Input/Output separation
                     const formattedExample = example.replace(/\s*-\s*/g, '<br>');
-                    return `
-                        <div class="example-card">
-                            <div class="example-header">Example ${index + 1}</div>
-                            <div class="example-content">${formattedExample}</div>
-                        </div>
-                    `;
+                    return '<div class="example-card"><div class="example-header">Example ' + (index + 1) + '</div><div class="example-content">' + formattedExample + '</div></div>';
                 }).join('');
             }
         }
 
-        // Display problem details
         function displayProblem(problem) {
-            // Update title
-            document.getElementById('problemTitle').textContent = `${problem.id}. ${problem.title}`;
-            document.title = `${problem.title} - Problem`;
-
-            // Update difficulty
+            document.getElementById('problemTitle').textContent = problem.id + '. ' + problem.title;
+            document.title = problem.title + ' - Problem';
             const difficultyEl = document.getElementById('problemDifficulty');
             difficultyEl.textContent = problem.difficulty;
-            difficultyEl.className = `difficulty ${problem.difficulty.toLowerCase()}`;
-
-            // Update description
+            difficultyEl.className = 'difficulty ' + problem.difficulty.toLowerCase();
             const descEl = document.getElementById('problemDescription');
-            if (problem.description) {
-                descEl.innerHTML = problem.description;
-            } else {
-                descEl.innerHTML = '<p>No description available.</p>';
-            }
-
-            // Update examples first
-            if (problem.examples) {
-                displayExamples(problem.examples);
-            }
-
-            // Update hints
-            if (problem.hints) {
-                displayHints(problem.hints);
-            }
-
-            // Update topics (if available)
+            descEl.innerHTML = problem.description ? problem.description : '<p>No description available.</p>';
+            if (problem.examples) displayExamples(problem.examples);
+            if (problem.hints) displayHints(problem.hints);
             const topicsEl = document.getElementById('problemTopics');
             if (problem.topics) {
                 const topics = problem.topics.split(',').map(t => t.trim());
-                topicsEl.innerHTML = topics.map(topic => 
-                    `<span class="topic-tag">${topic}</span>`
-                ).join('');
+                topicsEl.innerHTML = topics.map(topic => '<span class="topic-tag">' + topic + '</span>').join('');
             }
-
-            // Update code template based on problem title
             updateCodeTemplate(problem.title);
         }
 
-        // Code templates for different languages
-        const codeTemplates = {
-            javascript: (title) => {
-                const funcName = title.toLowerCase().replace(/\s+/g, '');
-                return `/**
- * @param {number[]} nums
- * @param {number} target
- * @return {number[]}
- */
-var ${funcName} = function(nums, target) {
-    // Your code here
-    
-};`;
-            },
-            python: (title) => {
-                return `class Solution:
-    def ${title.toLowerCase().replace(/\s+/g, '_')}(self, nums: List[int], target: int) -> List[int]:
-        # Your code here
-        pass`;
-            },
-            java: (title) => {
-                return `class Solution {
-    public int[] ${title.toLowerCase().replace(/\s+/g, '')}(int[] nums, int target) {
-        // Your code here
-        
-    }
-}`;
-            },
-            cpp: (title) => {
-                return `class Solution {
-public:
-    vector<int> ${title.toLowerCase().replace(/\s+/g, '')}(vector<int>& nums, int target) {
-        // Your code here
-        
-    }
-};`;
-            },
-            csharp: (title) => {
-                return `public class Solution {
-    public int[] ${title.toLowerCase().replace(/\s+/g, '')}(int[] nums, int target) {
-        // Your code here
-        
-    }
-}`;
+        function getCodeTemplate(title) {
+            const titleLower = title.toLowerCase();
+            const isSorting = titleLower.includes('sort') || titleLower.includes('bubble') || titleLower.includes('quick') || titleLower.includes('merge');
+            if (isSorting) {
+                return '# Read input\nn = int(input())\narr = list(map(int, input().split()))\n\n# Bubble Sort implementation\ndef bubble_sort(arr):\n    n = len(arr)\n    for i in range(n):\n        for j in range(0, n-i-1):\n            if arr[j] > arr[j+1]:\n                arr[j], arr[j+1] = arr[j+1], arr[j]\n    return arr\n\nresult = bubble_sort(arr)\nprint(\' \'.join(map(str, result)))';
             }
-        };
+            return '# Read input\ninput_data = input()\n\n# Process input and output result\nprint("Result")';
+        }
 
-        // Update code area when language changes
-        langTabs.forEach(tab => {
-            tab.addEventListener('click', () => {
-                const lang = tab.dataset.lang;
-                const title = document.getElementById('problemTitle').textContent.replace(/^\d+\.\s*/, '');
-                if (codeTemplates[lang]) {
-                    document.getElementById('codeArea').value = codeTemplates[lang](title);
-                }
-            });
-        });
-
-        // Initialize code template
         function updateCodeTemplate(title) {
-            const activeTab = document.querySelector('.lang-tab.active');
-            const lang = activeTab ? activeTab.dataset.lang : 'javascript';
-            if (codeTemplates[lang]) {
-                document.getElementById('codeArea').value = codeTemplates[lang](title);
+            const codeTemplate = getCodeTemplate(title);
+            const codeInput = document.getElementById('codeInput');
+            const lineNumbers = document.getElementById('lineNumbers');
+            codeInput.value = codeTemplate;
+            const lines = codeTemplate.split('\n').length;
+            let lineNumbersHtml = '';
+            for (let i = 1; i <= lines; i++) {
+                lineNumbersHtml += '<span>' + i + '</span>';
+            }
+            lineNumbers.innerHTML = lineNumbersHtml;
+        }
+
+        function updateLineNumbers() {
+            const codeInput = document.getElementById('codeInput');
+            const lineNumbers = document.getElementById('lineNumbers');
+            const lines = codeInput.value.split('\n').length;
+            let lineNumbersHtml = '';
+            for (let i = 1; i <= lines; i++) {
+                lineNumbersHtml += '<span>' + i + '</span>';
+            }
+            lineNumbers.innerHTML = lineNumbersHtml;
+        }
+
+        async function fetchTestCases() {
+            const problemId = getProblemId();
+            if (!problemId) {
+                document.getElementById('testCasesContainer').innerHTML = '<div class="no-testcases">Problem not found</div>';
+                return;
+            }
+            try {
+                const response = await fetch('http://localhost:3000/api/problems/' + problemId + '/testcases');
+                const result = await response.json();
+                if (result.success && result.data.length > 0) {
+                    displayTestCases(result.data);
+                } else {
+                    document.getElementById('testCasesContainer').innerHTML = '<div class="no-testcases">No test cases available</div>';
+                }
+            } catch (error) {
+                console.error('Error fetching test cases:', error);
+                document.getElementById('testCasesContainer').innerHTML = '<div class="no-testcases">Error loading test cases</div>';
             }
         }
 
-        // Load problem when page loads
-        document.addEventListener('DOMContentLoaded', fetchProblemDetail);
+        function displayTestCases(testCases) {
+            const container = document.getElementById('testCasesContainer');
+            container.innerHTML = testCases.map(function(tc, index) {
+                var inputDisplay = tc.is_hidden ? '<span class="hidden">[Hidden]</span>' : escapeHtml(tc.input_data);
+                var outputDisplay = tc.is_hidden ? '<span class="hidden">[Hidden]</span>' : escapeHtml(tc.expected_output);
+                var badge = tc.is_hidden ? '<span class="test-case-badge">Hidden</span>' : '';
+                return '<div class="test-case"><div class="test-case-header"><span class="test-case-title">Case ' + (index + 1) + '</span>' + badge + '</div><div class="test-case-content"><div class="test-input"><span class="label">Input:</span><code>' + inputDisplay + '</code></div><div class="test-output"><span class="label">Expected Output:</span><code>' + outputDisplay + '</code></div></div></div>';
+            }).join('');
+        }
+
+        function escapeHtml(text) {
+            if (!text) return '';
+            return text.replace(/&/g, '&amp;').replace(/</g, '<').replace(/>/g, '>').replace(/"/g, '"').replace(/'/g, '&#039;').replace(/\n/g, '<br>');
+        }
+
+        async function submitCode() {
+            var problemId = getProblemId();
+            var code = document.getElementById('codeInput').value;
+            var submitBtn = document.getElementById('submitBtn');
+            if (!problemId) { alert('Problem not found'); return; }
+            if (!code || !code.trim()) { alert('Please write your code before submitting'); return; }
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Submitting...';
+            var resultsSection = document.getElementById('resultsSection');
+            resultsSection.style.display = 'block';
+            document.getElementById('submissionStatus').textContent = 'Submitting...';
+            document.getElementById('submissionStatus').className = 'status-badge loading';
+            document.getElementById('testResultsContainer').innerHTML = '<div class="loading-message">Evaluating your code...</div>';
+            try {
+                var response = await fetch('http://localhost:3000/api/submit/' + problemId, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ code: code })
+                });
+                var result = await response.json();
+                if (result.success) { displayResults(result.data); }
+                else { displayError(result.message || 'Submission failed'); }
+            } catch (error) {
+                console.error('Error submitting code:', error);
+                displayError('Error connecting to server');
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Submit';
+            }
+        }
+
+        async function runCode() {
+            var problemId = getProblemId();
+            var code = document.getElementById('codeInput').value;
+            var runBtn = document.getElementById('runBtn');
+            if (!problemId) { alert('Problem not found'); return; }
+            if (!code || !code.trim()) { alert('Please write your code before running'); return; }
+            
+            runBtn.disabled = true;
+            runBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Running...';
+            
+            var resultsSection = document.getElementById('resultsSection');
+            resultsSection.style.display = 'block';
+            document.getElementById('submissionStatus').textContent = 'Running...';
+            document.getElementById('submissionStatus').className = 'status-badge loading';
+            
+            // Get test cases first
+            try {
+                var testCasesResponse = await fetch('http://localhost:3000/api/problems/' + problemId + '/testcases');
+                var testCasesResult = await testCasesResponse.json();
+                
+                if (!testCasesResult.success || testCasesResult.data.length === 0) {
+                    displayError('No test cases available');
+                    runBtn.disabled = false;
+                    runBtn.innerHTML = '<i class="fas fa-play"></i> Run';
+                    return;
+                }
+                
+                // Initialize results display
+                var testResultsContainer = document.getElementById('testResultsContainer');
+                testResultsContainer.innerHTML = '';
+                
+                var testCases = testCasesResult.data;
+                var allPassed = true;
+                var totalTime = 0;
+                var maxMemory = 0;
+                
+                // Run each test case progressively
+                for (var i = 0; i < testCases.length; i++) {
+                    var tc = testCases[i];
+                    
+                    // Create placeholder for this test case
+                    var resultItem = document.createElement('div');
+                    resultItem.className = 'test-result-item pending';
+                    resultItem.id = 'test-result-' + i;
+                    resultItem.innerHTML = '<div class="test-result-header"><span class="test-result-title">Test Case ' + (i + 1) + '</span><span class="test-result-status pending"><i class="fas fa-spinner fa-spin"></i> Running...</span></div>';
+                    testResultsContainer.appendChild(resultItem);
+                    
+                    // Run single test case
+                    var submitResponse = await fetch('http://localhost:3000/api/submit/' + problemId, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ 
+                            code: code,
+                            testCaseId: tc.id,
+                            inputData: tc.input_data,
+                            expectedOutput: tc.expected_output
+                        })
+                    });
+                    
+                    var submitResult = await submitResponse.json();
+                    
+                    // Update this test case result
+                    var statusEl = document.getElementById('test-result-' + i);
+                    if (submitResult.success) {
+                        var tcData = submitResult.data;
+                        var tcStatus = tcData.status || 'Wrong Answer';
+                        var statusClass = getStatusClass(tcStatus);
+                        
+                        if (tcStatus !== 'Accepted') {
+                            allPassed = false;
+                        }
+                        
+                        totalTime += tcData.runtime || 0;
+                        maxMemory = Math.max(maxMemory, tcData.memory || 0);
+                        
+                        statusEl.className = 'test-result-item ' + statusClass;
+                        statusEl.innerHTML = '<div class="test-result-header"><span class="test-result-title">Test Case ' + (i + 1) + '</span><span class="test-result-status ' + statusClass + '">' + tcStatus + '</span></div>';
+                        
+                        // If failed, continue to show other test cases but mark as failed
+                        if (!allPassed) {
+                            // Continue to next test case
+                        }
+                    } else {
+                        allPassed = false;
+                        statusEl.className = 'test-result-item error';
+                        statusEl.innerHTML = '<div class="test-result-header"><span class="test-result-title">Test Case ' + (i + 1) + '</span><span class="test-result-status error">Error</span></div>';
+                    }
+                }
+                
+                // Update final status
+                var finalStatusEl = document.getElementById('submissionStatus');
+                if (allPassed) {
+                    finalStatusEl.textContent = 'Passed';
+                    finalStatusEl.className = 'status-badge accepted';
+                } else {
+                    finalStatusEl.textContent = 'Failed';
+                    finalStatusEl.className = 'status-badge wrong-answer';
+                }
+                
+                document.getElementById('runtimeValue').textContent = totalTime.toFixed(2) + ' ms';
+                document.getElementById('memoryValue').textContent = (maxMemory / 1024).toFixed(2) + ' MB';
+                
+            } catch (error) {
+                console.error('Error running code:', error);
+                displayError('Error connecting to server');
+            } finally {
+                runBtn.disabled = false;
+                runBtn.innerHTML = '<i class="fas fa-play"></i> Run';
+            }
+        }
+
+        function displayResults(data) {
+            var statusEl = document.getElementById('submissionStatus');
+            statusEl.textContent = data.status;
+            statusEl.className = 'status-badge ' + getStatusClass(data.status);
+            document.getElementById('runtimeValue').textContent = data.runtime.toFixed(2) + ' ms';
+            document.getElementById('memoryValue').textContent = (data.memory / 1024).toFixed(2) + ' MB';
+            var testResultsContainer = document.getElementById('testResultsContainer');
+            if (data.testcases && data.testcases.length > 0) {
+                testResultsContainer.innerHTML = data.testcases.map(function(tc, index) {
+                    var statusClass = tc.status.toLowerCase().replace(' ', '-');
+                    return '<div class="test-result-item ' + statusClass + '"><div class="test-result-header"><span class="test-result-title">Test Case ' + (index + 1) + '</span><span class="test-result-status ' + statusClass + '">' + tc.status + '</span></div></div>';
+                }).join('');
+            }
+        }
+
+        function displayError(message) {
+            var statusEl = document.getElementById('submissionStatus');
+            statusEl.textContent = 'Error';
+            statusEl.className = 'status-badge error';
+            var testResultsContainer = document.getElementById('testResultsContainer');
+            testResultsContainer.innerHTML = '<div class="error-message">' + message + '</div>';
+        }
+
+        function getStatusClass(status) {
+            switch (status.toLowerCase()) {
+                case 'accepted': return 'accepted';
+                case 'wrong answer': return 'wrong-answer';
+                case 'time limit exceeded': return 'tle';
+                case 'runtime error': return 'runtime-error';
+                case 'compilation error': return 'compilation-error';
+                default: return 'pending';
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            var codeInput = document.getElementById('codeInput');
+            var lineNumbers = document.getElementById('lineNumbers');
+            var submitBtn = document.getElementById('submitBtn');
+            var runBtn = document.getElementById('runBtn');
+            codeInput.addEventListener('input', updateLineNumbers);
+            codeInput.addEventListener('scroll', function() { lineNumbers.scrollTop = codeInput.scrollTop; });
+            codeInput.addEventListener('keydown', function(e) {
+                if (e.key === 'Tab') {
+                    e.preventDefault();
+                    var start = codeInput.selectionStart;
+                    var end = codeInput.selectionEnd;
+                    codeInput.value = codeInput.value.substring(0, start) + '    ' + codeInput.value.substring(end);
+                    codeInput.selectionStart = codeInput.selectionEnd = start + 4;
+                    updateLineNumbers();
+                }
+            });
+            submitBtn.addEventListener('click', submitCode);
+            runBtn.addEventListener('click', runCode);
+            fetchProblemDetail();
+            fetchTestCases();
+        });
     </script>
 </body>
 </html>
