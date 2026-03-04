@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Admin Dashboard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/FrondEnd/Style/style.css" />
+    <link rel="stylesheet" href="/FrondEnd/Style/admin.css" />
+</head>
+<body>
+    <div class="app-container admin-app">
+        <div class="top-section">
+            <aside class="admin-sidebar">
+                <div class="sidebar-header">
+                    <h1>Admin Panel</h1>
+                </div>
+                <nav class="admin-nav">
+                      <a href="/FrondEnd/Html/Admin/admin-dashboard.html">Dashboard</a>
+                    <a href="/FrondEnd/Html/Admin/content-management.html">Content (Courses)</a>
+                    <a href="/FrondEnd/Html/Admin/user-management.html" class="active">Users</a>
+                </nav>
+            </aside>
+            <main class="admin-main">
+                <h1 class="admin-page-title">Admin Dashboard</h1>
+                <div class="stat-grid">
+                    <div class="stat-card">
+                        <h3>Total Courses</h3>
+                        <span class="value" id="statCourses">0</span>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Total Users</h3>
+                        <span class="value" id="statUsers">0</span>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Active Sessions</h3>
+                        <span class="value" id="statSessions">—</span>
+                    </div>
+                </div>
+                <h2 class="admin-page-title" style="font-size: 18px; margin-top: 32px;">Quick actions</h2>
+                <div class="quick-links">
+                    <a href="content-management.html" class="quick-link">
+                        <span>📚</span>
+                        <span>Manage Courses</span>
+                    </a>
+                    <a href="user-management.html" class="quick-link">
+                        <span>👥</span>
+                        <span>Manage Users</span>
+                    </a>
+                </div>
+            </main>
+        </div>
+    </div>
+    <footer>
+        <div class="footer-content">
+            <div class="footer-decoration">
+                <div class="decoration-line"></div>
+                <div class="decoration-dot"></div>
+                <div class="decoration-line"></div>
+            </div>
+            <div class="footer-text">
+                <p>Admin Dashboard · Built with MN-Team</p>
+                <p class="footer-subtitle">Content & User Management</p>
+            </div>
+            <div class="footer-decoration">
+                <div class="decoration-line"></div>
+                <div class="decoration-dot"></div>
+                <div class="decoration-line"></div>
+            </div>
+        </div>
+    </footer>
+    <script src="js/admin.js"></script>
+    <script>
+        (function () {
+            var defaultCourses = [
+                { id: '1', title: 'Intro to Algorithms', category: 'Programming', status: 'published', created: '2025-01-15' },
+                { id: '2', title: 'UI/UX Fundamentals', category: 'Design', status: 'published', created: '2025-01-10' },
+                { id: '3', title: 'Data Visualization', category: 'Data Science', status: 'draft', created: '2025-01-20' }
+            ];
+            var defaultUsers = [
+                { id: '1', name: 'Jane Doe', email: 'jane@example.com', role: 'admin', status: 'active', joined: '2025-01-05' },
+                { id: '2', name: 'John Smith', email: 'john@example.com', role: 'instructor', status: 'active', joined: '2025-01-12' },
+                { id: '3', name: 'Alice Wong', email: 'alice@example.com', role: 'student', status: 'active', joined: '2025-01-18' }
+            ];
+            function load() {
+                if (!localStorage.getItem('adminCourses')) localStorage.setItem('adminCourses', JSON.stringify(defaultCourses));
+                if (!localStorage.getItem('adminUsers')) localStorage.setItem('adminUsers', JSON.stringify(defaultUsers));
+                var c = localStorage.getItem('adminCourses');
+                var u = localStorage.getItem('adminUsers');
+                var courses = [];
+                var users = [];
+                try { if (c) courses = JSON.parse(c); } catch (_) {}
+                try { if (u) users = JSON.parse(u); } catch (_) {}
+                var sc = document.getElementById('statCourses');
+                var su = document.getElementById('statUsers');
+                if (sc) sc.textContent = courses.length;
+                if (su) su.textContent = users.length;
+            }
+            if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', load);
+            else load();
+        })();
+    </script>
+</body>
+</html>
