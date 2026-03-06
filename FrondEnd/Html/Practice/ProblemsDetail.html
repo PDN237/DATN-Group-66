@@ -65,7 +65,19 @@
 
             <div class="code-editor-panel">
                 <div class="editor-header">
-                    <span class="editor-title">Python Code</span>
+                    <span class="editor-title">Code Editor</span>
+                    <select id="languageSelect" class="language-select" onchange="onLanguageChange()">
+                        <option value="python">Python</option>
+                        <option value="javascript">JavaScript</option>
+                        <option value="java">Java</option>
+                        <option value="cpp">C++</option>
+                        <option value="c">C</option>
+                        <option value="csharp">C#</option>
+                        <option value="go">Go</option>
+                        <option value="rust">Rust</option>
+                        <option value="ruby">Ruby</option>
+                        <option value="php">PHP</option>
+                    </select>
                 </div>
                 <div class="code-editor-wrapper">
                     <div class="line-numbers" id="lineNumbers">
@@ -73,32 +85,53 @@
                     </div>
                     <textarea id="codeInput" class="code-input" spellcheck="false" placeholder="Write your Python code here..."></textarea>
                 </div>
-                <div class="test-cases-section" id="testCasesSection">
-                    <h3>Test Cases</h3>
-                    <div id="testCasesContainer">
-                        <div class="loading-testcases">Loading test cases...</div>
+                
+                <!-- Unified Test Cases & Results Panel -->
+                <div class="test-results-panel" id="testResultsPanel">
+                    <div class="panel-tabs">
+                        <button class="panel-tab active" id="tabTestCases" onclick="switchTab('testCases')">
+                            <i class="fas fa-vial"></i>
+                            <span>Test Cases</span>
+                            <span class="tab-count" id="testCaseCount">(0)</span>
+                        </button>
+                        <button class="panel-tab" id="tabResults" onclick="switchTab('results')">
+                            <i class="fas fa-clipboard-check"></i>
+                            <span>Results</span>
+                            <span id="resultStatusBadge" class="status-badge"></span>
+                        </button>
+                    </div>
+                    
+                    <!-- Test Cases Content -->
+                    <div class="tab-content" id="testCasesContent">
+                        <div id="testCasesContainer">
+                            <div class="loading-message">Loading test cases...</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Results Content -->
+                    <div class="tab-content" id="resultsContent" style="display: none;">
+                        <div class="results-summary">
+                            <div class="result-item">
+                                <span class="result-label"><i class="fas fa-clock"></i> Runtime:</span>
+                                <span class="result-value" id="runtimeValue">0 ms</span>
+                            </div>
+                            <div class="result-item">
+                                <span class="result-label"><i class="fas fa-microchip"></i> Memory:</span>
+                                <span class="result-value" id="memoryValue">0 MB</span>
+                            </div>
+                        </div>
+                        <div class="test-results-container" id="testResultsContainer">
+                            <div class="empty-results">
+                                <i class="fas fa-info-circle"></i>
+                                <span>Run or submit your code to see results</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
+                
                 <div class="editor-actions">
                     <button class="btn btn-secondary" id="runBtn"><i class="fas fa-play"></i> Run</button>
                     <button class="btn btn-primary" id="submitBtn"><i class="fas fa-paper-plane"></i> Submit</button>
-                </div>
-                <div class="results-section" id="resultsSection" style="display: none;">
-                    <div class="results-header">
-                        <span>Results</span>
-                        <span id="submissionStatus" class="status-badge"></span>
-                    </div>
-                    <div class="results-content">
-                        <div class="result-item">
-                            <span class="result-label">Runtime:</span>
-                            <span class="result-value" id="runtimeValue">0 ms</span>
-                        </div>
-                        <div class="result-item">
-                            <span class="result-label">Memory:</span>
-                            <span class="result-value" id="memoryValue">0 MB</span>
-                        </div>
-                    </div>
-                    <div class="test-results-container" id="testResultsContainer"></div>
                 </div>
             </div>
         </div>
@@ -120,9 +153,37 @@
     </footer>
 
     <script>
+        // Store code for each language
+        const codeStorage = {};
+
+        // Current active tab
+        let currentTab = 'testCases';
+
         function getProblemId() {
             const urlParams = new URLSearchParams(window.location.search);
             return urlParams.get('id');
+        }
+
+        // Switch between Test Cases and Results tabs
+        function switchTab(tabName) {
+            currentTab = tabName;
+            
+            const tabTestCases = document.getElementById('tabTestCases');
+            const tabResults = document.getElementById('tabResults');
+            const testCasesContent = document.getElementById('testCasesContent');
+            const resultsContent = document.getElementById('resultsContent');
+            
+            if (tabName === 'testCases') {
+                tabTestCases.classList.add('active');
+                tabResults.classList.remove('active');
+                testCasesContent.style.display = 'block';
+                resultsContent.style.display = 'none';
+            } else {
+                tabTestCases.classList.remove('active');
+                tabResults.classList.add('active');
+                testCasesContent.style.display = 'none';
+                resultsContent.style.display = 'block';
+            }
         }
 
         async function fetchProblemDetail() {
@@ -214,7 +275,7 @@
                 const topics = problem.topics.split(',').map(t => t.trim());
                 topicsEl.innerHTML = topics.map(topic => '<span class="topic-tag">' + topic + '</span>').join('');
             }
-            updateCodeTemplate(problem.title);
+            initializeCodeEditor(problem.title);
         }
 
         function getCodeTemplate(title) {
@@ -261,8 +322,10 @@
                 const result = await response.json();
                 if (result.success && result.data.length > 0) {
                     displayTestCases(result.data);
+                    document.getElementById('testCaseCount').textContent = '(' + result.data.length + ')';
                 } else {
                     document.getElementById('testCasesContainer').innerHTML = '<div class="no-testcases">No test cases available</div>';
+                    document.getElementById('testCaseCount').textContent = '(0)';
                 }
             } catch (error) {
                 console.error('Error fetching test cases:', error);
@@ -272,11 +335,31 @@
 
         function displayTestCases(testCases) {
             const container = document.getElementById('testCasesContainer');
-            container.innerHTML = testCases.map(function(tc, index) {
-                var inputDisplay = tc.is_hidden ? '<span class="hidden">[Hidden]</span>' : escapeHtml(tc.input_data);
-                var outputDisplay = tc.is_hidden ? '<span class="hidden">[Hidden]</span>' : escapeHtml(tc.expected_output);
-                var badge = tc.is_hidden ? '<span class="test-case-badge">Hidden</span>' : '';
-                return '<div class="test-case"><div class="test-case-header"><span class="test-case-title">Case ' + (index + 1) + '</span>' + badge + '</div><div class="test-case-content"><div class="test-input"><span class="label">Input:</span><code>' + inputDisplay + '</code></div><div class="test-output"><span class="label">Expected Output:</span><code>' + outputDisplay + '</code></div></div></div>';
+            container.innerHTML = testCases.map((tc, index) => {
+                const inputDisplay = tc.is_hidden ? '<span class="hidden">[Hidden]</span>' : escapeHtml(tc.input_data);
+                const outputDisplay = tc.is_hidden ? '<span class="hidden">[Hidden]</span>' : escapeHtml(tc.expected_output);
+                const badge = tc.is_hidden ? '<span class="test-case-badge">Hidden</span>' : '';
+                return `
+                    <div class="test-case-card">
+                        <div class="test-case-header">
+                            <div class="test-case-title">
+                                <i class="fas fa-vial"></i>
+                                <span>Test Case ${index + 1}</span>
+                            </div>
+                            ${badge}
+                        </div>
+                        <div class="test-case-body">
+                            <div class="test-case-row">
+                                <span class="test-case-label"><i class="fas fa-sign-in-alt"></i> Input:</span>
+                                <code class="test-case-value">${inputDisplay}</code>
+                            </div>
+                            <div class="test-case-row">
+                                <span class="test-case-label"><i class="fas fa-sign-out-alt"></i> Expected Output:</span>
+                                <code class="test-case-value">${outputDisplay}</code>
+                            </div>
+                        </div>
+                    </div>
+                `;
             }).join('');
         }
 
@@ -285,29 +368,130 @@
             return text.replace(/&/g, '&amp;').replace(/</g, '<').replace(/>/g, '>').replace(/"/g, '"').replace(/'/g, '&#039;').replace(/\n/g, '<br>');
         }
 
+        function getSelectedLanguage() {
+            return document.getElementById('languageSelect').value;
+        }
+
+        function getCodeTemplateByLanguage(title, language) {
+            const functionName = extractFunctionName(title, language);
+            
+            switch (language) {
+                case 'python':
+                    return `# ${functionName} function\ndef ${functionName}():\n    pass\n\n# Main\nif __name__ == "__main__":\n    ${functionName}()`;
+                case 'javascript':
+                    return `// ${functionName} function\nfunction ${functionName}() {\n    \n}\n\n// Main\n${functionName}();`;
+                case 'java':
+                    return `public class Main {\n    public static void ${functionName}() {\n        \n    }\n    \n    public static void main(String[] args) {\n        ${functionName}();\n    }\n}`;
+                case 'cpp':
+                    return `#include <iostream>\nusing namespace std;\n\nvoid ${functionName}() {\n    \n}\n\nint main() {\n    ${functionName}();\n    return 0;\n}`;
+                case 'c':
+                    return `#include <stdio.h>\n\nvoid ${functionName}() {\n    \n}\n\nint main() {\n    ${functionName}();\n    return 0;\n}`;
+                case 'csharp':
+                    return `using System;\n\nclass Program {\n    static void ${toCamelCase(title)}() {\n        \n    }\n    \n    static void Main() {\n        ${toCamelCase(title)}();\n    }\n}`;
+                case 'go':
+                    return `package main\n\nimport "fmt"\n\nfunc ${functionName}() {\n    \n}\n\nfunc main() {\n    ${functionName}()\n}`;
+                case 'rust':
+                    return `fn ${functionName}() {\n    \n}\n\nfn main() {\n    ${functionName}()\n}`;
+                case 'ruby':
+                    return `# ${functionName} method\ndef ${functionName}\n    \nend\n\n# Main\n${functionName}`;
+                case 'php':
+                    return `<?php\n\nfunction ${functionName}() {\n    \n}\n\n// Main\n${functionName}();\n?>`;
+                default:
+                    return '';
+            }
+        }
+
+        function extractFunctionName(title, language) {
+            let name = title.replace(/^\d+\.\s*/, '');
+            name = name.replace(/[^a-zA-Z0-9\s]/g, '');
+            name = name.trim().replace(/\s+/g, '_');
+            
+            if (language === 'python' || language === 'ruby' || language === 'go' || language === 'rust') {
+                return name.toLowerCase();
+            } else if (language === 'java' || language === 'javascript' || language === 'csharp') {
+                return toCamelCase(name);
+            } else {
+                return name.toLowerCase();
+            }
+        }
+
+        function toCamelCase(str) {
+            return str.charAt(0).toLowerCase() + str.slice(1).replace(/[-_](\w)/g, function(match, p1) {
+                return p1.toUpperCase();
+            });
+        }
+
+        function onLanguageChange() {
+            const language = getSelectedLanguage();
+            const codeInput = document.getElementById('codeInput');
+            const problemTitle = document.getElementById('problemTitle').textContent;
+            
+            const currentCode = codeInput.value;
+            if (currentCode.trim()) {
+                codeStorage[getSelectedLanguage()] = currentCode;
+            }
+            
+            const placeholders = {
+                python: 'Write your Python code here...',
+                javascript: 'Write your JavaScript code here...',
+                java: 'Write your Java code here...',
+                cpp: 'Write your C++ code here...',
+                c: 'Write your C code here...',
+                csharp: 'Write your C# code here...',
+                go: 'Write your Go code here...',
+                rust: 'Write your Rust code here...',
+                ruby: 'Write your Ruby code here...',
+                php: 'Write your PHP code here...'
+            };
+            
+            codeInput.placeholder = placeholders[language] || 'Write your code here...';
+            
+            const newTemplate = getCodeTemplateByLanguage(problemTitle, language);
+            codeInput.value = newTemplate;
+            updateLineNumbers();
+        }
+
+        function initializeCodeEditor(title) {
+            const language = getSelectedLanguage();
+            const codeInput = document.getElementById('codeInput');
+            const template = getCodeTemplateByLanguage(title, language);
+            codeInput.value = template;
+            updateLineNumbers();
+        }
+
         async function submitCode() {
-            var problemId = getProblemId();
-            var code = document.getElementById('codeInput').value;
-            var language = 'python'; // Default language
-            var submitBtn = document.getElementById('submitBtn');
+            const problemId = getProblemId();
+            const code = document.getElementById('codeInput').value;
+            const language = getSelectedLanguage();
+            const submitBtn = document.getElementById('submitBtn');
+            
             if (!problemId) { alert('Problem not found'); return; }
             if (!code || !code.trim()) { alert('Please write your code before submitting'); return; }
+            
             submitBtn.disabled = true;
             submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Submitting...';
-            var resultsSection = document.getElementById('resultsSection');
-            resultsSection.style.display = 'block';
-            document.getElementById('submissionStatus').textContent = 'Submitting...';
-            document.getElementById('submissionStatus').className = 'status-badge loading';
-            document.getElementById('testResultsContainer').innerHTML = '<div class="loading-message">Evaluating your code...</div>';
+            
+            // Switch to results tab
+            switchTab('results');
+            
+            const statusEl = document.getElementById('resultStatusBadge');
+            statusEl.textContent = 'Submitting...';
+            statusEl.className = 'status-badge loading';
+            
+            document.getElementById('testResultsContainer').innerHTML = '<div class="loading-message"><i class="fas fa-spinner fa-spin"></i> Evaluating your code...</div>';
+            
             try {
-                var response = await fetch('http://localhost:3000/api/submit/' + problemId, {
+                const response = await fetch('http://localhost:3000/api/submit/' + problemId, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ code: code, language: language })
                 });
-                var result = await response.json();
-                if (result.success) { displayResults(result.data); }
-                else { displayError(result.message || 'Submission failed'); }
+                const result = await response.json();
+                if (result.success) { 
+                    displayResults(result.data); 
+                } else { 
+                    displayError(result.message || 'Submission failed'); 
+                }
             } catch (error) {
                 console.error('Error submitting code:', error);
                 displayError('Error connecting to server');
@@ -318,25 +502,27 @@
         }
 
         async function runCode() {
-            var problemId = getProblemId();
-            var code = document.getElementById('codeInput').value;
-            var language = 'python'; // Default language
-            var runBtn = document.getElementById('runBtn');
+            const problemId = getProblemId();
+            const code = document.getElementById('codeInput').value;
+            const language = getSelectedLanguage();
+            const runBtn = document.getElementById('runBtn');
+            
             if (!problemId) { alert('Problem not found'); return; }
             if (!code || !code.trim()) { alert('Please write your code before running'); return; }
             
             runBtn.disabled = true;
             runBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Running...';
             
-            var resultsSection = document.getElementById('resultsSection');
-            resultsSection.style.display = 'block';
-            document.getElementById('submissionStatus').textContent = 'Running...';
-            document.getElementById('submissionStatus').className = 'status-badge loading';
+            // Switch to results tab
+            switchTab('results');
             
-            // Get test cases first
+            const statusEl = document.getElementById('resultStatusBadge');
+            statusEl.textContent = 'Running...';
+            statusEl.className = 'status-badge loading';
+            
             try {
-                var testCasesResponse = await fetch('http://localhost:3000/api/problems/' + problemId + '/testcases');
-                var testCasesResult = await testCasesResponse.json();
+                const testCasesResponse = await fetch('http://localhost:3000/api/problems/' + problemId + '/testcases');
+                const testCasesResult = await testCasesResponse.json();
                 
                 if (!testCasesResult.success || testCasesResult.data.length === 0) {
                     displayError('No test cases available');
@@ -345,28 +531,32 @@
                     return;
                 }
                 
-                // Initialize results display
-                var testResultsContainer = document.getElementById('testResultsContainer');
+                const testResultsContainer = document.getElementById('testResultsContainer');
                 testResultsContainer.innerHTML = '';
                 
-                var testCases = testCasesResult.data;
-                var allPassed = true;
-                var totalTime = 0;
-                var maxMemory = 0;
+                const testCases = testCasesResult.data;
+                let allPassed = true;
+                let totalTime = 0;
+                let maxMemory = 0;
                 
-                // Run each test case progressively
-                for (var i = 0; i < testCases.length; i++) {
-                    var tc = testCases[i];
+                for (let i = 0; i < testCases.length; i++) {
+                    const tc = testCases[i];
                     
-                    // Create placeholder for this test case
-                    var resultItem = document.createElement('div');
-                    resultItem.className = 'test-result-item pending';
+                    const resultItem = document.createElement('div');
+                    resultItem.className = 'test-result-card pending';
                     resultItem.id = 'test-result-' + i;
-                    resultItem.innerHTML = '<div class="test-result-header"><span class="test-result-title">Test Case ' + (i + 1) + '</span><span class="test-result-status pending"><i class="fas fa-spinner fa-spin"></i> Running...</span></div>';
+                    resultItem.innerHTML = `
+                        <div class="test-result-header">
+                            <div class="test-result-title">
+                                <i class="fas fa-circle-notch fa-spin"></i>
+                                <span>Test Case ${i + 1}</span>
+                            </div>
+                            <span class="test-result-status pending">Running...</span>
+                        </div>
+                    `;
                     testResultsContainer.appendChild(resultItem);
                     
-                    // Run single test case
-                    var submitResponse = await fetch('http://localhost:3000/api/submit/' + problemId, {
+                    const submitResponse = await fetch('http://localhost:3000/api/submit/' + problemId, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({ 
@@ -378,14 +568,13 @@
                         })
                     });
                     
-                    var submitResult = await submitResponse.json();
+                    const submitResult = await submitResponse.json();
                     
-                    // Update this test case result
-                    var statusEl = document.getElementById('test-result-' + i);
+                    const statusElResult = document.getElementById('test-result-' + i);
                     if (submitResult.success) {
-                        var tcData = submitResult.data;
-                        var tcStatus = tcData.status || 'Wrong Answer';
-                        var statusClass = getStatusClass(tcStatus);
+                        const tcData = submitResult.data;
+                        const tcStatus = tcData.status || 'Wrong Answer';
+                        const statusClass = getStatusClass(tcStatus);
                         
                         if (tcStatus !== 'Accepted') {
                             allPassed = false;
@@ -394,22 +583,49 @@
                         totalTime += tcData.runtime || 0;
                         maxMemory = Math.max(maxMemory, tcData.memory || 0);
                         
-                        statusEl.className = 'test-result-item ' + statusClass;
-                        statusEl.innerHTML = '<div class="test-result-header"><span class="test-result-title">Test Case ' + (i + 1) + '</span><span class="test-result-status ' + statusClass + '">' + tcStatus + '</span></div>';
-                        
-                        // If failed, continue to show other test cases but mark as failed
-                        if (!allPassed) {
-                            // Continue to next test case
-                        }
+                        const statusIcon = tcStatus === 'Accepted' ? 'fa-check' : 'fa-times';
+                        statusElResult.className = 'test-result-card ' + statusClass;
+                        statusElResult.innerHTML = `
+                            <div class="test-result-header">
+                                <div class="test-result-title">
+                                    <i class="fas ${statusIcon}"></i>
+                                    <span>Test Case ${i + 1}</span>
+                                </div>
+                                <span class="test-result-status ${statusClass}">${tcStatus}</span>
+                            </div>
+                            ${tcStatus !== 'Accepted' ? `
+                            <div class="test-result-details">
+                                <div class="detail-row">
+                                    <span class="detail-label"><i class="fas fa-sign-in-alt"></i> Input:</span>
+                                    <code>${tc.is_hidden ? '[Hidden]' : escapeHtml(tc.input_data)}</code>
+                                </div>
+                                <div class="detail-row">
+                                    <span class="detail-label"><i class="fas fa-sign-out-alt"></i> Expected:</span>
+                                    <code>${tc.is_hidden ? '[Hidden]' : escapeHtml(tc.expected_output)}</code>
+                                </div>
+                                <div class="detail-row">
+                                    <span class="detail-label"><i class="fas fa-code"></i> Output:</span>
+                                    <code>${escapeHtml(tcData.output || 'No output')}</code>
+                                </div>
+                            </div>
+                            ` : ''}
+                        `;
                     } else {
                         allPassed = false;
-                        statusEl.className = 'test-result-item error';
-                        statusEl.innerHTML = '<div class="test-result-header"><span class="test-result-title">Test Case ' + (i + 1) + '</span><span class="test-result-status error">Error</span></div>';
+                        statusElResult.className = 'test-result-card error';
+                        statusElResult.innerHTML = `
+                            <div class="test-result-header">
+                                <div class="test-result-title">
+                                    <i class="fas fa-exclamation-triangle"></i>
+                                    <span>Test Case ${i + 1}</span>
+                                </div>
+                                <span class="test-result-status error">Error</span>
+                            </div>
+                        `;
                     }
                 }
                 
-                // Update final status
-                var finalStatusEl = document.getElementById('submissionStatus');
+                const finalStatusEl = document.getElementById('resultStatusBadge');
                 if (allPassed) {
                     finalStatusEl.textContent = 'Passed';
                     finalStatusEl.className = 'status-badge accepted';
@@ -431,26 +647,38 @@
         }
 
         function displayResults(data) {
-            var statusEl = document.getElementById('submissionStatus');
+            const statusEl = document.getElementById('resultStatusBadge');
             statusEl.textContent = data.status;
             statusEl.className = 'status-badge ' + getStatusClass(data.status);
             document.getElementById('runtimeValue').textContent = data.runtime.toFixed(2) + ' ms';
             document.getElementById('memoryValue').textContent = (data.memory / 1024).toFixed(2) + ' MB';
-            var testResultsContainer = document.getElementById('testResultsContainer');
+            
+            const testResultsContainer = document.getElementById('testResultsContainer');
             if (data.testcases && data.testcases.length > 0) {
-                testResultsContainer.innerHTML = data.testcases.map(function(tc, index) {
-                    var statusClass = tc.status.toLowerCase().replace(' ', '-');
-                    return '<div class="test-result-item ' + statusClass + '"><div class="test-result-header"><span class="test-result-title">Test Case ' + (index + 1) + '</span><span class="test-result-status ' + statusClass + '">' + tc.status + '</span></div></div>';
+                testResultsContainer.innerHTML = data.testcases.map((tc, index) => {
+                    const statusClass = tc.status.toLowerCase().replace(' ', '-');
+                    const statusIcon = tc.status === 'Accepted' ? 'fa-check' : 'fa-times';
+                    return `
+                        <div class="test-result-card ${statusClass}">
+                            <div class="test-result-header">
+                                <div class="test-result-title">
+                                    <i class="fas ${statusIcon}"></i>
+                                    <span>Test Case ${index + 1}</span>
+                                </div>
+                                <span class="test-result-status ${statusClass}">${tc.status}</span>
+                            </div>
+                        </div>
+                    `;
                 }).join('');
             }
         }
 
         function displayError(message) {
-            var statusEl = document.getElementById('submissionStatus');
+            const statusEl = document.getElementById('resultStatusBadge');
             statusEl.textContent = 'Error';
             statusEl.className = 'status-badge error';
-            var testResultsContainer = document.getElementById('testResultsContainer');
-            testResultsContainer.innerHTML = '<div class="error-message">' + message + '</div>';
+            const testResultsContainer = document.getElementById('testResultsContainer');
+            testResultsContainer.innerHTML = '<div class="error-message"><i class="fas fa-exclamation-triangle"></i> ' + message + '</div>';
         }
 
         function getStatusClass(status) {
@@ -465,27 +693,31 @@
         }
 
         document.addEventListener('DOMContentLoaded', function() {
-            var codeInput = document.getElementById('codeInput');
-            var lineNumbers = document.getElementById('lineNumbers');
-            var submitBtn = document.getElementById('submitBtn');
-            var runBtn = document.getElementById('runBtn');
+            const codeInput = document.getElementById('codeInput');
+            const lineNumbers = document.getElementById('lineNumbers');
+            const submitBtn = document.getElementById('submitBtn');
+            const runBtn = document.getElementById('runBtn');
+            
             codeInput.addEventListener('input', updateLineNumbers);
             codeInput.addEventListener('scroll', function() { lineNumbers.scrollTop = codeInput.scrollTop; });
             codeInput.addEventListener('keydown', function(e) {
                 if (e.key === 'Tab') {
                     e.preventDefault();
-                    var start = codeInput.selectionStart;
-                    var end = codeInput.selectionEnd;
+                    const start = codeInput.selectionStart;
+                    const end = codeInput.selectionEnd;
                     codeInput.value = codeInput.value.substring(0, start) + '    ' + codeInput.value.substring(end);
                     codeInput.selectionStart = codeInput.selectionEnd = start + 4;
                     updateLineNumbers();
                 }
             });
+            
             submitBtn.addEventListener('click', submitCode);
             runBtn.addEventListener('click', runCode);
+            
             fetchProblemDetail();
             fetchTestCases();
         });
     </script>
 </body>
 </html>
+
