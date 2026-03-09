@@ -1,0 +1,1370 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Khóa học Thuật toán Sắp xếp</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8fafc;
+            color: #1e293b;
+            overflow-x: hidden;
+        }
+
+        /* Header */
+        .header {
+            background-color: #ffffff;
+            border-bottom: 1px solid #e2e8f0;
+            padding: 16px 24px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+
+        .header-content {
+            max-width: 1600px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .header-title {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: #0891b2;
+        }
+
+        .separator {
+            color: #64748b;
+        }
+
+        .course-name {
+            font-size: 18px;
+        }
+
+        /* Main Layout */
+        .main-container {
+            display: flex;
+            max-width: 1600px;
+            margin: 0 auto;
+            height: calc(100vh - 73px);
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 320px;
+            background-color: #ffffff;
+            border-right: 1px solid #e2e8f0;
+            overflow-y: auto;
+            flex-shrink: 0;
+        }
+
+        .sidebar-header {
+            padding: 16px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .sidebar-header h2 {
+            font-size: 18px;
+            margin-bottom: 4px;
+        }
+
+        .sidebar-header p {
+            font-size: 14px;
+            color: #64748b;
+        }
+
+        .module {
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .module-header {
+            width: 100%;
+            background: none;
+            border: none;
+            color: #1e293b;
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: background-color 0.2s;
+        }
+
+        .module-header:hover {
+            background-color: #f1f5f9;
+        }
+
+        .module-lessons {
+            background-color: #f8fafc;
+            display: none;
+        }
+
+        .module-lessons.active {
+            display: block;
+        }
+
+        .lesson-item {
+            width: 100%;
+            background: none;
+            border: none;
+            border-left: 2px solid transparent;
+            color: #1e293b;
+            padding: 12px 16px;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            cursor: pointer;
+            text-align: left;
+            transition: all 0.2s;
+        }
+
+        .lesson-item:hover {
+            background-color: #f1f5f9;
+        }
+
+        .lesson-item.active {
+            border-left-color: #0891b2;
+            background-color: #e0f2fe;
+        }
+
+        .lesson-icon {
+            width: 20px;
+            height: 20px;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        .lesson-icon.completed {
+            background-color: #22c55e;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .lesson-icon.video,
+        .lesson-icon.reading,
+        .lesson-icon.quiz {
+            color: #64748b;
+        }
+
+        .lesson-info {
+            flex: 1;
+        }
+
+        .lesson-title {
+            font-size: 14px;
+            margin-bottom: 4px;
+        }
+
+        .lesson-item.active .lesson-title {
+            color: #0891b2;
+        }
+
+        .lesson-meta {
+            font-size: 12px;
+            color: #64748b;
+        }
+
+        /* Content Area */
+        .content-area {
+            flex: 1;
+            overflow-y: auto;
+        }
+
+        .video-section {
+            background: linear-gradient(to bottom, #ffffff, #f8fafc);
+            padding: 32px;
+        }
+
+        .video-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .video-player {
+            background: linear-gradient(135deg, #e2e8f0, #cbd5e1);
+            border-radius: 8px;
+            aspect-ratio: 16/9;
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .video-placeholder {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+        }
+
+        .play-button {
+            width: 80px;
+            height: 80px;
+            background-color: rgba(8, 145, 178, 0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 16px;
+        }
+
+        .play-icon {
+            width: 40px;
+            height: 40px;
+            color: #0891b2;
+        }
+
+        .video-controls {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(to top, rgba(0,0,0,0.6), transparent);
+            padding: 16px;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .video-player:hover .video-controls {
+            opacity: 1;
+        }
+
+        .progress-bar {
+            height: 4px;
+            background-color: #cbd5e1;
+            border-radius: 2px;
+            margin-bottom: 12px;
+            cursor: pointer;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background-color: #0891b2;
+            border-radius: 2px;
+            width: 25%;
+        }
+
+        .controls-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .controls-left,
+        .controls-right {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .control-btn {
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+            padding: 4px;
+            transition: color 0.2s;
+        }
+
+        .control-btn:hover {
+            color: #0891b2;
+        }
+
+        .video-time {
+            font-size: 14px;
+        }
+
+        .lesson-header {
+            margin-top: 24px;
+        }
+
+        .lesson-header h1 {
+            font-size: 28px;
+            margin-bottom: 8px;
+        }
+
+        .lesson-description {
+            color: #64748b;
+            font-size: 16px;
+        }
+
+        /* Tabs */
+        .tabs-container {
+            background-color: #ffffff;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .tabs {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 32px;
+            display: flex;
+            gap: 32px;
+        }
+
+        .tab-btn {
+            background: none;
+            border: none;
+            border-bottom: 2px solid transparent;
+            color: #64748b;
+            padding: 12px 0;
+            cursor: pointer;
+            font-size: 15px;
+            transition: all 0.2s;
+        }
+
+        .tab-btn:hover {
+            color: #1e293b;
+        }
+
+        .tab-btn.active {
+            color: #0891b2;
+            border-bottom-color: #0891b2;
+        }
+
+        /* Tab Content */
+        .tab-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 32px;
+        }
+
+        .tab-panel {
+            display: none;
+        }
+
+        .tab-panel.active {
+            display: block;
+        }
+
+        .transcript-item {
+            display: flex;
+            gap: 16px;
+            padding: 12px;
+            border-radius: 4px;
+            transition: background-color 0.2s;
+            margin-bottom: 8px;
+        }
+
+        .transcript-item:hover {
+            background-color: #f1f5f9;
+        }
+
+        .transcript-time {
+            color: #0891b2;
+            font-family: monospace;
+            font-size: 14px;
+            flex-shrink: 0;
+        }
+
+        .transcript-text {
+            color: #475569;
+            line-height: 1.6;
+        }
+
+        .resource-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px;
+            background-color: #ffffff;
+            border-radius: 8px;
+            margin-bottom: 12px;
+            transition: background-color 0.2s;
+            border: 1px solid #e2e8f0;
+        }
+
+        .resource-item:hover {
+            background-color: #f8fafc;
+        }
+
+        .resource-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .resource-icon {
+            width: 40px;
+            height: 40px;
+            background-color: rgba(8, 145, 178, 0.15);
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #0891b2;
+            font-size: 10px;
+            font-weight: bold;
+        }
+
+        .resource-name {
+            font-weight: 500;
+        }
+
+        .resource-size {
+            font-size: 14px;
+            color: #64748b;
+            margin-top: 2px;
+        }
+
+        .download-btn {
+            background-color: #0891b2;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .download-btn:hover {
+            background-color: #0e7490;
+        }
+
+        /* Quiz Styles */
+        .quiz-container {
+            min-height: calc(100vh - 73px);
+            padding: 32px;
+        }
+
+        .quiz-content {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .quiz-header {
+            margin-bottom: 32px;
+        }
+
+        .quiz-title-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .quiz-title {
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .quiz-progress-text {
+            color: #64748b;
+        }
+
+        .quiz-progress-bar {
+            height: 8px;
+            background-color: #e2e8f0;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .quiz-progress-fill {
+            height: 100%;
+            background-color: #0891b2;
+            transition: width 0.3s;
+        }
+
+        .question-card {
+            background-color: #ffffff;
+            border-radius: 8px;
+            padding: 32px;
+            margin-bottom: 24px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .question-text {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 24px;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .option {
+            background-color: #f8fafc;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 16px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .option:hover:not(.disabled) {
+            border-color: #cbd5e1;
+            background-color: #f1f5f9;
+        }
+
+        .option.selected {
+            border-color: #0891b2;
+            background-color: rgba(8, 145, 178, 0.1);
+        }
+
+        .option.correct {
+            border-color: #22c55e;
+            background-color: rgba(34, 197, 94, 0.1);
+        }
+
+        .option.wrong {
+            border-color: #ef4444;
+            background-color: rgba(239, 68, 68, 0.1);
+        }
+
+        .option.disabled {
+            cursor: not-allowed;
+        }
+
+        .option-radio {
+            width: 24px;
+            height: 24px;
+            border: 2px solid #94a3b8;
+            border-radius: 50%;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .option.selected .option-radio {
+            border-color: #0891b2;
+            background-color: #0891b2;
+        }
+
+        .option.correct .option-radio {
+            border-color: #22c55e;
+            background-color: #22c55e;
+        }
+
+        .option.wrong .option-radio {
+            border-color: #ef4444;
+            background-color: #ef4444;
+        }
+
+        .explanation {
+            margin-top: 24px;
+            padding: 16px;
+            background-color: #f0f9ff;
+            border-radius: 8px;
+            border: 1px solid rgba(8, 145, 178, 0.3);
+        }
+
+        .explanation-title {
+            color: #0891b2;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .explanation-text {
+            color: #475569;
+            line-height: 1.6;
+        }
+
+        .quiz-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border-radius: 8px;
+            border: none;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-secondary {
+            background-color: #f1f5f9;
+            color: #1e293b;
+        }
+
+        .btn-secondary:hover:not(:disabled) {
+            background-color: #e2e8f0;
+        }
+
+        .btn-primary {
+            background-color: #0891b2;
+            color: white;
+        }
+
+        .btn-primary:hover:not(:disabled) {
+            background-color: #0e7490;
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* Results */
+        .results-container {
+            text-align: center;
+        }
+
+        .results-card {
+            background-color: #ffffff;
+            border-radius: 8px;
+            padding: 48px;
+            margin-bottom: 24px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .results-title {
+            font-size: 32px;
+            font-weight: bold;
+            margin-bottom: 32px;
+        }
+
+        .score-circle {
+            display: inline-block;
+            position: relative;
+            margin: 32px 0;
+        }
+
+        .score-number {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 48px;
+            font-weight: bold;
+            color: #0891b2;
+        }
+
+        .score-label {
+            color: #64748b;
+            margin-top: 8px;
+        }
+
+        .score-percentage {
+            font-size: 24px;
+            margin-bottom: 8px;
+        }
+
+        .score-message {
+            color: #64748b;
+            font-size: 16px;
+        }
+
+        .review-section {
+            background-color: #ffffff;
+            border-radius: 8px;
+            padding: 32px;
+            margin-bottom: 24px;
+            text-align: left;
+            border: 1px solid #e2e8f0;
+        }
+
+        .review-title {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 24px;
+        }
+
+        .review-item {
+            padding: 16px;
+            border-radius: 8px;
+            border-left: 4px solid;
+            margin-bottom: 16px;
+        }
+
+        .review-item.correct {
+            border-color: #22c55e;
+            background-color: rgba(34, 197, 94, 0.05);
+        }
+
+        .review-item.incorrect {
+            border-color: #ef4444;
+            background-color: rgba(239, 68, 68, 0.05);
+        }
+
+        .review-header {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 8px;
+        }
+
+        .review-icon {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .review-icon.correct {
+            background-color: #22c55e;
+        }
+
+        .review-icon.incorrect {
+            background-color: #ef4444;
+        }
+
+        .review-question {
+            font-weight: 500;
+            margin-bottom: 8px;
+        }
+
+        .review-answer {
+            font-size: 14px;
+            margin-top: 4px;
+        }
+
+        .review-answer.user {
+            color: #ef4444;
+        }
+
+        .review-answer.correct {
+            color: #22c55e;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        /* Icons */
+        svg {
+            width: 20px;
+            height: 20px;
+        }
+
+        .icon-sm {
+            width: 16px;
+            height: 16px;
+        }
+
+        .icon-lg {
+            width: 24px;
+            height: 24px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <div class="header-title">
+                <div class="logo">COURSES</div>
+                <span class="separator">/</span>
+                <span class="course-name">Thuật toán Sắp xếp</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <div class="main-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h2>Nội dung khóa học</h2>
+                <p>15 bài học • 1h 30p</p>
+            </div>
+            <div id="modulesList"></div>
+        </aside>
+
+        <!-- Content Area -->
+        <main class="content-area">
+            <!-- Video Section -->
+            <div id="videoSection" class="video-section">
+                <div class="video-container">
+                    <div class="video-player" onclick="togglePlay()">
+                        <div class="video-placeholder">
+                            <div class="play-button">
+                                <svg class="play-icon" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M8 5v14l11-7z"/>
+                                </svg>
+                            </div>
+                            <p style="color: #64748b;">Video: Tổng quan về khóa học</p>
+                        </div>
+                        <div class="video-controls">
+                            <div class="progress-bar">
+                                <div class="progress-fill"></div>
+                            </div>
+                            <div class="controls-row">
+                                <div class="controls-left">
+                                    <button class="control-btn">
+                                        <svg fill="currentColor" viewBox="0 0 24 24">
+                                            <path d="M8 5v14l11-7z"/>
+                                        </svg>
+                                    </button>
+                                    <span class="video-time">0:03 / 3:07</span>
+                                </div>
+                                <div class="controls-right">
+                                    <button class="control-btn">
+                                        <svg fill="currentColor" viewBox="0 0 24 24">
+                                            <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z"/>
+                                        </svg>
+                                    </button>
+                                    <button class="control-btn">
+                                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                                        </svg>
+                                    </button>
+                                    <button class="control-btn">
+                                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"></path>
+                                        </svg>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="lesson-header">
+                        <h1 id="lessonTitle">Tổng quan về khóa học: Thuật toán Sắp xếp</h1>
+                        <p class="lesson-description" id="lessonDescription">
+                            Chào mừng bạn đến với khóa học về các thuật toán sắp xếp. Trong video này, chúng ta sẽ tìm hiểu tổng quan về nội dung khóa học.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tabs -->
+            <div class="tabs-container">
+                <div class="tabs">
+                    <button class="tab-btn active" onclick="switchTab('transcript')">Bản chép lời</button>
+                    <button class="tab-btn" onclick="switchTab('details')">Chi tiết</button>
+                    <button class="tab-btn" onclick="switchTab('resources')">Tài nguyên</button>
+                </div>
+            </div>
+
+            <!-- Tab Content -->
+            <div class="tab-content">
+                <div id="transcriptTab" class="tab-panel active">
+                    <div id="transcriptContent"></div>
+                </div>
+                <div id="detailsTab" class="tab-panel">
+                    <h2 style="font-size: 20px; font-weight: 600; margin-bottom: 16px;">Chi tiết bài học</h2>
+                    <p style="color: #475569; line-height: 1.8; margin-bottom: 16px;" id="detailsContent"></p>
+                    <h3 style="font-size: 18px; font-weight: 600; margin: 24px 0 12px;">Nội dung chính</h3>
+                    <ul style="color: #475569; line-height: 2;">
+                        <li>• Giới thiệu tổng quan về thuật toán</li>
+                        <li>• Phân tích độ phức tạp thời gian</li>
+                        <li>• Cài đặt thuật toán bằng nhiều ngôn ngữ</li>
+                        <li>• Ví dụ thực tế và ứng dụng</li>
+                    </ul>
+                </div>
+                <div id="resourcesTab" class="tab-panel">
+                    <h2 style="font-size: 20px; font-weight: 600; margin-bottom: 16px;">Tài liệu bổ sung</h2>
+                    <div id="resourcesContent"></div>
+                </div>
+            </div>
+
+            <!-- Quiz Section (hidden by default) -->
+            <div id="quizSection" class="quiz-container hidden">
+                <div class="quiz-content">
+                    <div id="quizMain">
+                        <div class="quiz-header">
+                            <div class="quiz-title-row">
+                                <h2 class="quiz-title">Bài kiểm tra thuật toán</h2>
+                                <span class="quiz-progress-text" id="quizProgress">Câu 1/5</span>
+                            </div>
+                            <div class="quiz-progress-bar">
+                                <div class="quiz-progress-fill" id="quizProgressBar" style="width: 20%"></div>
+                            </div>
+                        </div>
+
+                        <div class="question-card">
+                            <h3 class="question-text" id="questionText"></h3>
+                            <div class="options" id="optionsContainer"></div>
+                            <div id="explanationContainer" class="hidden"></div>
+                        </div>
+
+                        <div class="quiz-nav">
+                            <button class="btn btn-secondary" id="prevBtn" onclick="prevQuestion()">Câu trước</button>
+                            <button class="btn btn-primary" id="nextBtn" onclick="nextQuestion()">Câu tiếp theo</button>
+                        </div>
+                    </div>
+
+                    <div id="resultsSection" class="results-container hidden">
+                        <div class="results-card">
+                            <h2 class="results-title">Kết quả bài kiểm tra</h2>
+                            <div class="score-circle">
+                                <svg width="192" height="192">
+                                    <circle cx="96" cy="96" r="88" stroke="#e2e8f0" stroke-width="12" fill="none"/>
+                                    <circle id="scoreCircle" cx="96" cy="96" r="88" stroke="#0891b2" stroke-width="12" fill="none" 
+                                        style="transform: rotate(-90deg); transform-origin: center; stroke-dasharray: 553; stroke-dashoffset: 414;"/>
+                                </svg>
+                                <div class="score-number" id="scoreNumber">0/5</div>
+                            </div>
+                            <div style="margin-top: -16px;">
+                                <p class="score-label">câu đúng</p>
+                            </div>
+                            <p class="score-percentage" id="scorePercentage">Điểm số: 0%</p>
+                            <p class="score-message" id="scoreMessage"></p>
+                        </div>
+
+                        <div class="review-section">
+                            <h3 class="review-title">Chi tiết các câu hỏi</h3>
+                            <div id="reviewContent"></div>
+                        </div>
+
+                        <button class="btn btn-primary" onclick="retryQuiz()" style="display: flex; align-items: center; gap: 8px; margin: 0 auto;">
+                            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+                            </svg>
+                            Làm lại
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Data
+        const courseModules = [
+            {
+                id: 1,
+                title: 'Giới thiệu về Thuật toán Sắp xếp',
+                lessons: [
+                    { id: 0, title: 'Tổng quan về khóa học: Thuật toán Sắp xếp', duration: '4 phút', type: 'video', completed: true },
+                    { id: 1, title: 'Tại sao cần học thuật toán sắp xếp?', duration: '3 phút', type: 'video', completed: true },
+                    { id: 2, title: 'Các khái niệm cơ bản về độ phức tạp', duration: '6 phút', type: 'reading', completed: false }
+                ]
+            },
+            {
+                id: 2,
+                title: 'Thuật toán Sắp xếp Cơ bản',
+                lessons: [
+                    { id: 3, title: 'Bubble Sort - Giới thiệu và Cài đặt', duration: '8 phút', type: 'video', completed: false },
+                    { id: 4, title: 'Selection Sort - Chọn phần tử nhỏ nhất', duration: '7 phút', type: 'video', completed: false },
+                    { id: 5, title: 'Insertion Sort - Sắp xếp chèn', duration: '6 phút', type: 'video', completed: false },
+                    { id: 6, title: 'Bài tập thực hành', duration: '5 câu', type: 'quiz', completed: false }
+                ]
+            },
+            {
+                id: 3,
+                title: 'Thuật toán Sắp xếp Nâng cao',
+                lessons: [
+                    { id: 7, title: 'Merge Sort - Chia để trị', duration: '10 phút', type: 'video', completed: false },
+                    { id: 8, title: 'Quick Sort - Sắp xếp nhanh', duration: '12 phút', type: 'video', completed: false },
+                    { id: 9, title: 'Heap Sort - Sắp xếp vun đống', duration: '9 phút', type: 'video', completed: false },
+                    { id: 10, title: 'So sánh các thuật toán', duration: '8 phút', type: 'reading', completed: false },
+                    { id: 11, title: 'Kiểm tra cuối khóa', duration: '10 câu', type: 'quiz', completed: false }
+                ]
+            }
+        ];
+
+        const lessonContent = {
+            0: {
+                title: 'Tổng quan về khóa học: Thuật toán Sắp xếp',
+                description: 'Chào mừng bạn đến với khóa học về các thuật toán sắp xếp. Trong video này, chúng ta sẽ tìm hiểu tổng quan về nội dung khóa học.',
+                transcript: [
+                    { time: '0:00', text: 'Xin chào các bạn, chào mừng đến với khóa học thuật toán sắp xếp.' },
+                    { time: '0:15', text: 'Trong khóa học này, chúng ta sẽ tìm hiểu về các thuật toán sắp xếp phổ biến nhất.' },
+                    { time: '0:30', text: 'Bắt đầu từ những thuật toán đơn giản như Bubble Sort, Selection Sort.' },
+                    { time: '0:45', text: 'Sau đó, chúng ta sẽ đi sâu vào các thuật toán phức tạp hơn như Merge Sort, Quick Sort.' }
+                ],
+                resources: [
+                    { name: 'Slide bài giảng.pdf', type: 'PDF', size: '2.4 MB' },
+                    { name: 'Source code ví dụ.zip', type: 'ZIP', size: '156 KB' }
+                ]
+            },
+            1: {
+                title: 'Tại sao cần học thuật toán sắp xếp?',
+                description: 'Hiểu được tầm quan trọng của thuật toán sắp xếp trong lập trình và các ứng dụng thực tế.',
+                transcript: [
+                    { time: '0:00', text: 'Thuật toán sắp xếp là một trong những kiến thức cơ bản nhất trong khoa học máy tính.' },
+                    { time: '0:20', text: 'Chúng được sử dụng rộng rãi trong nhiều ứng dụng thực tế.' },
+                    { time: '0:40', text: 'Từ việc tổ chức dữ liệu, tìm kiếm thông tin, đến tối ưu hóa hiệu suất.' }
+                ],
+                resources: []
+            },
+            3: {
+                title: 'Bubble Sort - Giới thiệu và Cài đặt',
+                description: 'Tìm hiểu về thuật toán Bubble Sort - một trong những thuật toán sắp xếp đơn giản nhất.',
+                transcript: [
+                    { time: '0:00', text: 'Bubble Sort là thuật toán sắp xếp đơn giản nhất dành cho người mới bắt đầu.' },
+                    { time: '0:25', text: 'Ý tưởng chính là so sánh hai phần tử liền kề và hoán đổi nếu chúng sai thứ tự.' },
+                    { time: '0:50', text: 'Thuật toán này có độ phức tạp O(n²) trong trường hợp xấu nhất.' }
+                ],
+                resources: [
+                    { name: 'Bubble Sort Demo.html', type: 'HTML', size: '45 KB' },
+                    { name: 'Visualization.gif', type: 'GIF', size: '890 KB' }
+                ]
+            }
+        };
+
+        const quizQuestions = [
+            {
+                id: 1,
+                question: 'Độ phức tạp thời gian trong trường hợp xấu nhất của thuật toán Bubble Sort là gì?',
+                options: ['O(n)', 'O(n log n)', 'O(n²)', 'O(log n)'],
+                correctAnswer: 2,
+                explanation: 'Bubble Sort có độ phức tạp O(n²) vì cần 2 vòng lặp lồng nhau để so sánh và hoán đổi các phần tử.'
+            },
+            {
+                id: 2,
+                question: 'Thuật toán sắp xếp nào sử dụng phương pháp "chia để trị" (divide and conquer)?',
+                options: ['Bubble Sort', 'Selection Sort', 'Merge Sort', 'Insertion Sort'],
+                correctAnswer: 2,
+                explanation: 'Merge Sort sử dụng phương pháp chia để trị bằng cách chia mảng thành các phần nhỏ hơn, sắp xếp từng phần rồi gộp lại.'
+            },
+            {
+                id: 3,
+                question: 'Trong thuật toán Quick Sort, phần tử được chọn để phân chia mảng được gọi là gì?',
+                options: ['Median', 'Pivot', 'Delimiter', 'Separator'],
+                correctAnswer: 1,
+                explanation: 'Pivot (chốt) là phần tử được chọn để làm mốc phân chia mảng trong Quick Sort.'
+            },
+            {
+                id: 4,
+                question: 'Thuật toán sắp xếp nào có độ phức tạp O(n log n) trong mọi trường hợp?',
+                options: ['Quick Sort', 'Merge Sort', 'Heap Sort', 'Cả B và C'],
+                correctAnswer: 3,
+                explanation: 'Cả Merge Sort và Heap Sort đều đảm bảo độ phức tạp O(n log n) trong mọi trường hợp. Quick Sort có thể đạt O(n²) trong trường hợp xấu nhất.'
+            },
+            {
+                id: 5,
+                question: 'Thuật toán sắp xếp nào thường được coi là tốt nhất cho mảng gần như đã được sắp xếp?',
+                options: ['Bubble Sort', 'Insertion Sort', 'Selection Sort', 'Quick Sort'],
+                correctAnswer: 1,
+                explanation: 'Insertion Sort có độ phức tạp O(n) khi mảng gần như đã được sắp xếp, làm cho nó trở thành lựa chọn tốt nhất trong trường hợp này.'
+            }
+        ];
+
+        // State
+        let currentLesson = 0;
+        let currentQuestion = 0;
+        let selectedAnswers = new Array(quizQuestions.length).fill(null);
+        let quizSubmitted = false;
+        let expandedModules = [1, 2, 3];
+
+        // Initialize
+        function init() {
+            renderModules();
+            loadLesson(0);
+        }
+
+        // Render modules
+        function renderModules() {
+            const modulesList = document.getElementById('modulesList');
+            modulesList.innerHTML = '';
+
+            courseModules.forEach(module => {
+                const moduleDiv = document.createElement('div');
+                moduleDiv.className = 'module';
+
+                const isExpanded = expandedModules.includes(module.id);
+
+                moduleDiv.innerHTML = `
+                    <button class="module-header" onclick="toggleModule(${module.id})">
+                        <span>${module.title}</span>
+                        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" style="transform: rotate(${isExpanded ? '180deg' : '0deg'}); transition: transform 0.2s;">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                        </svg>
+                    </button>
+                    <div class="module-lessons ${isExpanded ? 'active' : ''}">
+                        ${module.lessons.map(lesson => `
+                            <button class="lesson-item ${currentLesson === lesson.id ? 'active' : ''}" onclick="loadLesson(${lesson.id})">
+                                <div class="lesson-icon ${lesson.completed ? 'completed' : lesson.type}">
+                                    ${lesson.completed ? '✓' : 
+                                      lesson.type === 'video' ? '▶' : 
+                                      lesson.type === 'reading' ? '📄' : '□'}
+                                </div>
+                                <div class="lesson-info">
+                                    <p class="lesson-title">${lesson.title}</p>
+                                    <p class="lesson-meta">
+                                        ${lesson.type === 'video' ? 'Video' : lesson.type === 'reading' ? 'Bài đọc' : 'Trắc nghiệm'} • ${lesson.duration}
+                                    </p>
+                                </div>
+                            </button>
+                        `).join('')}
+                    </div>
+                `;
+
+                modulesList.appendChild(moduleDiv);
+            });
+        }
+
+        function toggleModule(moduleId) {
+            if (expandedModules.includes(moduleId)) {
+                expandedModules = expandedModules.filter(id => id !== moduleId);
+            } else {
+                expandedModules.push(moduleId);
+            }
+            renderModules();
+        }
+
+        function loadLesson(lessonId) {
+            currentLesson = lessonId;
+
+            // Find lesson type
+            let lessonType = 'video';
+            courseModules.forEach(module => {
+                const lesson = module.lessons.find(l => l.id === lessonId);
+                if (lesson) {
+                    lessonType = lesson.type;
+                }
+            });
+
+            if (lessonType === 'quiz') {
+                showQuiz();
+            } else {
+                showVideo();
+                const content = lessonContent[lessonId] || lessonContent[0];
+                document.getElementById('lessonTitle').textContent = content.title;
+                document.getElementById('lessonDescription').textContent = content.description;
+                document.getElementById('detailsContent').textContent = content.description;
+                
+                // Render transcript
+                const transcriptContent = document.getElementById('transcriptContent');
+                transcriptContent.innerHTML = content.transcript.map(item => `
+                    <div class="transcript-item">
+                        <span class="transcript-time">${item.time}</span>
+                        <p class="transcript-text">${item.text}</p>
+                    </div>
+                `).join('');
+
+                // Render resources
+                const resourcesContent = document.getElementById('resourcesContent');
+                if (content.resources.length > 0) {
+                    resourcesContent.innerHTML = content.resources.map(resource => `
+                        <div class="resource-item">
+                            <div class="resource-info">
+                                <div class="resource-icon">${resource.type}</div>
+                                <div>
+                                    <div class="resource-name">${resource.name}</div>
+                                    <div class="resource-size">${resource.size}</div>
+                                </div>
+                            </div>
+                            <button class="download-btn">Tải xuống</button>
+                        </div>
+                    `).join('');
+                } else {
+                    resourcesContent.innerHTML = '<p style="color: #64748b;">Chưa có tài liệu bổ sung cho bài học này.</p>';
+                }
+            }
+
+            renderModules();
+        }
+
+        function showVideo() {
+            document.getElementById('videoSection').classList.remove('hidden');
+            document.getElementById('quizSection').classList.add('hidden');
+        }
+
+        function showQuiz() {
+            document.getElementById('videoSection').classList.add('hidden');
+            document.getElementById('quizSection').classList.remove('hidden');
+            document.getElementById('quizMain').classList.remove('hidden');
+            document.getElementById('resultsSection').classList.add('hidden');
+            currentQuestion = 0;
+            selectedAnswers = new Array(quizQuestions.length).fill(null);
+            quizSubmitted = false;
+            renderQuestion();
+        }
+
+        function switchTab(tabName) {
+            // Update tab buttons
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+
+            // Update tab panels
+            document.querySelectorAll('.tab-panel').forEach(panel => {
+                panel.classList.remove('active');
+            });
+            document.getElementById(tabName + 'Tab').classList.add('active');
+        }
+
+        function togglePlay() {
+            // Placeholder for video play/pause
+            alert('Video player functionality would be implemented here');
+        }
+
+        // Quiz Functions
+        function renderQuestion() {
+            const question = quizQuestions[currentQuestion];
+            
+            document.getElementById('quizProgress').textContent = `Câu ${currentQuestion + 1}/${quizQuestions.length}`;
+            document.getElementById('quizProgressBar').style.width = `${((currentQuestion + 1) / quizQuestions.length) * 100}%`;
+            document.getElementById('questionText').textContent = question.question;
+
+            const optionsContainer = document.getElementById('optionsContainer');
+            optionsContainer.innerHTML = question.options.map((option, index) => {
+                const isSelected = selectedAnswers[currentQuestion] === index;
+                const isCorrect = index === question.correctAnswer;
+                const showCorrect = quizSubmitted && isCorrect;
+                const showWrong = quizSubmitted && isSelected && !isCorrect;
+
+                let optionClass = 'option';
+                if (showCorrect) optionClass += ' correct';
+                else if (showWrong) optionClass += ' wrong';
+                else if (isSelected) optionClass += ' selected';
+                if (quizSubmitted) optionClass += ' disabled';
+
+                return `
+                    <div class="${optionClass}" onclick="${quizSubmitted ? '' : `selectAnswer(${index})`}">
+                        <div class="option-radio">
+                            ${(showCorrect || (isSelected && !showWrong && quizSubmitted)) ? '✓' : showWrong ? '✗' : ''}
+                        </div>
+                        <span>${option}</span>
+                    </div>
+                `;
+            }).join('');
+
+            const explanationContainer = document.getElementById('explanationContainer');
+            if (quizSubmitted) {
+                explanationContainer.classList.remove('hidden');
+                explanationContainer.innerHTML = `
+                    <div class="explanation">
+                        <div class="explanation-title">Giải thích:</div>
+                        <div class="explanation-text">${question.explanation}</div>
+                    </div>
+                `;
+            } else {
+                explanationContainer.classList.add('hidden');
+            }
+
+            // Update buttons
+            document.getElementById('prevBtn').disabled = currentQuestion === 0;
+            
+            const nextBtn = document.getElementById('nextBtn');
+            if (currentQuestion === quizQuestions.length - 1) {
+                if (quizSubmitted) {
+                    nextBtn.textContent = 'Xem kết quả';
+                    nextBtn.onclick = showResults;
+                    nextBtn.disabled = false;
+                } else {
+                    nextBtn.textContent = 'Nộp bài';
+                    nextBtn.onclick = submitQuiz;
+                    nextBtn.disabled = selectedAnswers[currentQuestion] === null;
+                }
+            } else {
+                nextBtn.textContent = 'Câu tiếp theo';
+                nextBtn.onclick = nextQuestion;
+                nextBtn.disabled = selectedAnswers[currentQuestion] === null && !quizSubmitted;
+            }
+        }
+
+        function selectAnswer(index) {
+            if (quizSubmitted) return;
+            selectedAnswers[currentQuestion] = index;
+            renderQuestion();
+        }
+
+        function nextQuestion() {
+            if (currentQuestion < quizQuestions.length - 1) {
+                currentQuestion++;
+                renderQuestion();
+            }
+        }
+
+        function prevQuestion() {
+            if (currentQuestion > 0) {
+                currentQuestion--;
+                renderQuestion();
+            }
+        }
+
+        function submitQuiz() {
+            quizSubmitted = true;
+            renderQuestion();
+        }
+
+        function showResults() {
+            document.getElementById('quizMain').classList.add('hidden');
+            document.getElementById('resultsSection').classList.remove('hidden');
+
+            const score = calculateScore();
+            const percentage = Math.round((score / quizQuestions.length) * 100);
+
+            document.getElementById('scoreNumber').textContent = `${score}/${quizQuestions.length}`;
+            document.getElementById('scorePercentage').textContent = `Điểm số: ${percentage}%`;
+
+            let message = '';
+            if (percentage >= 80) {
+                message = 'Xuất sắc! Bạn đã nắm vững kiến thức.';
+            } else if (percentage >= 60) {
+                message = 'Tốt! Hãy ôn lại một số phần còn thiếu.';
+            } else {
+                message = 'Cần cố gắng thêm. Hãy xem lại bài giảng.';
+            }
+            document.getElementById('scoreMessage').textContent = message;
+
+            // Update circle
+            const circumference = 2 * Math.PI * 88;
+            const offset = circumference - (percentage / 100) * circumference;
+            document.getElementById('scoreCircle').style.strokeDashoffset = offset;
+
+            // Render review
+            const reviewContent = document.getElementById('reviewContent');
+            reviewContent.innerHTML = quizQuestions.map((q, index) => {
+                const userAnswer = selectedAnswers[index];
+                const isCorrect = userAnswer === q.correctAnswer;
+                
+                return `
+                    <div class="review-item ${isCorrect ? 'correct' : 'incorrect'}">
+                        <div class="review-header">
+                            <div class="review-icon ${isCorrect ? 'correct' : 'incorrect'}">
+                                ${isCorrect ? '✓' : '✗'}
+                            </div>
+                            <div>
+                                <p class="review-question">Câu ${index + 1}: ${q.question}</p>
+                            </div>
+                        </div>
+                        ${!isCorrect ? `
+                            <p class="review-answer user">Bạn đã chọn: ${q.options[userAnswer]}</p>
+                            <p class="review-answer correct">Đáp án đúng: ${q.options[q.correctAnswer]}</p>
+                        ` : `
+                            <p class="review-answer correct">Câu trả lời của bạn: ${q.options[userAnswer]}</p>
+                        `}
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function calculateScore() {
+            let score = 0;
+            quizQuestions.forEach((q, index) => {
+                if (selectedAnswers[index] === q.correctAnswer) {
+                    score++;
+                }
+            });
+            return score;
+        }
+
+        function retryQuiz() {
+            showQuiz();
+        }
+
+        // Start
+        init();
+    </script>
+</body>
+</html>

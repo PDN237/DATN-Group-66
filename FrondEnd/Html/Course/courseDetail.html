@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Course Detail</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/FrondEnd/Style/course.css">
+</head>
+
+<body class="detail-page">
+
+    <button class="back-btn" onclick="back()">← Quay lại</button>
+
+    <div class="course-hero">
+
+        <div class="hero-left">
+            <h1 id="title"></h1>
+            <p id="desc"></p>
+
+            <button class="start-btn" onclick="startCourse()">
+                📘 Vào bài học
+            </button>
+        </div>
+
+    </div>
+
+
+    <div class="course-info">
+
+        <div class="info-box">
+            <h3>⭐ 4.8</h3>
+            <p>Đánh giá</p>
+        </div>
+
+        <div class="info-box">
+            <h3>4 giờ</h3>
+            <p>Thời lượng</p>
+        </div>
+
+        <div class="info-box">
+            <h3>10 bài</h3>
+            <p>Nội dung</p>
+        </div>
+
+        <div class="info-box">
+            <h3>Online</h3>
+            <p>Học mọi lúc</p>
+        </div>
+
+    </div>
+
+
+    <div class="course-content">
+
+        <div class="overall-progress-card">
+
+            <h3>📊 Tiến độ khóa học</h3>
+
+            <div class="progress-bar-wrapper">
+                <div class="progress-bar-fill"
+                     id="courseProgressBar"
+                     style="width: 50%">
+                </div>
+            </div>
+
+            <div class="progress-stats">
+                <span id="completedLessons">2/4 bài hoàn thành</span>
+                <span id="courseProgressPercent">50%</span>
+            </div>
+
+        </div>
+
+
+        <h2>Nội dung khóa học</h2>
+
+        <ul id="lessonList"></ul>
+
+    </div>
+
+
+    <div class="comments-section">
+
+        <h2>💬 Nhận xét bài học</h2>
+
+        <div class="stars" id="starRating">
+            <span class="star" onclick="rate(1)">★</span>
+            <span class="star" onclick="rate(2)">★</span>
+            <span class="star" onclick="rate(3)">★</span>
+            <span class="star" onclick="rate(4)">★</span>
+            <span class="star" onclick="rate(5)">★</span>
+        </div>
+
+        <div class="comment-form">
+
+            <input id="username" placeholder="Tên của bạn">
+
+            <textarea id="commentText"
+                      placeholder="Viết nhận xét...">
+            </textarea>
+
+            <button onclick="addComment()">Gửi nhận xét</button>
+
+        </div>
+
+        <div id="commentList"></div>
+
+    </div>
+
+
+    <script>
+
+        const params = new URLSearchParams(window.location.search)
+
+        const course = params.get("course")
+
+        document.getElementById("title").innerText = course
+
+        document.getElementById("desc").innerText =
+            "Khóa học giúp bạn hiểu rõ thuật toán " + course
+
+
+        const lessons = [
+            { title: "Tổng quan", status: "completed" },
+            { title: "Cách hoạt động", status: "completed" },
+            { title: "Ví dụ trực quan", status: "in-progress" },
+            { title: "Tối ưu thuật toán", status: "locked" }
+        ]
+
+
+        const list = document.getElementById("lessonList")
+
+
+        lessons.forEach((l, i) => {
+
+            const li = document.createElement("li")
+
+            const lessonText = document.createElement("span")
+            lessonText.innerText =
+                "Bài " + (i + 1) + ": " + l.title
+
+
+            const statusDiv = document.createElement("div")
+            statusDiv.className =
+                "lesson-status " + l.status
+
+
+            const checkmark = document.createElement("div")
+            checkmark.className =
+                "lesson-check " + l.status
+
+
+            if (l.status === "completed") {
+
+                checkmark.innerText = "✓"
+                statusDiv.appendChild(checkmark)
+
+                const statusText =
+                    document.createElement("span")
+
+                statusText.innerText = "Hoàn thành"
+
+                statusDiv.appendChild(statusText)
+
+            }
+
+            else if (l.status === "in-progress") {
+
+                checkmark.innerText = "▶"
+                statusDiv.appendChild(checkmark)
+
+                const statusText =
+                    document.createElement("span")
+
+                statusText.innerText = "Đang học"
+
+                statusDiv.appendChild(statusText)
+
+            }
+
+            else {
+
+                checkmark.innerText = "🔒"
+                statusDiv.appendChild(checkmark)
+
+                const statusText =
+                    document.createElement("span")
+
+                statusText.innerText = "Khóa"
+
+                statusDiv.appendChild(statusText)
+
+            }
+
+
+            li.appendChild(lessonText)
+            li.appendChild(statusDiv)
+
+            list.appendChild(li)
+
+        })
+
+
+        // Calculate progress
+
+        const completedCount =
+            lessons.filter(l =>
+                l.status === "completed"
+            ).length
+
+        const totalLessons = lessons.length
+
+        const progressPercent =
+            Math.round(
+                (completedCount / totalLessons) * 100
+            )
+
+
+        document.getElementById("courseProgressBar")
+            .style.width = progressPercent + "%"
+
+
+        document.getElementById("completedLessons")
+            .innerText =
+            completedCount +
+            "/" +
+            totalLessons +
+            " bài hoàn thành"
+
+
+        document.getElementById("courseProgressPercent")
+            .innerText =
+            progressPercent + "%"
+
+
+        function startCourse() {
+
+            window.location.href =
+                "lesson.html?course=" + course
+
+        }
+
+
+        function back() {
+
+            window.location.href =
+                "course.html"
+
+        }
+
+
+
+        let currentRating = 0
+
+
+        function rate(num) {
+
+            currentRating = num
+
+            const stars =
+                document.querySelectorAll(".star")
+
+            stars.forEach((s, i) => {
+
+                if (i < num) {
+                    s.classList.add("active")
+                }
+                else {
+                    s.classList.remove("active")
+                }
+
+            })
+
+        }
+
+
+
+        function addComment() {
+
+            const name =
+                document.getElementById("username").value
+
+            const text =
+                document.getElementById("commentText").value
+
+
+            if (name === "" || text === "") {
+
+                alert("Vui lòng nhập đầy đủ thông tin")
+
+                return
+
+            }
+
+
+            const box =
+                document.createElement("div")
+
+            box.className = "comment"
+
+
+            const user =
+                document.createElement("h4")
+
+            user.innerText =
+                name + " " + "⭐".repeat(currentRating)
+
+
+            const msg =
+                document.createElement("p")
+
+            msg.innerText = text
+
+
+            box.appendChild(user)
+            box.appendChild(msg)
+
+
+            document
+                .getElementById("commentList")
+                .appendChild(box)
+
+
+            document
+                .getElementById("username").value = ""
+
+            document
+                .getElementById("commentText").value = ""
+
+        }
+
+    </script>
+
+</body>
+
+</html>
