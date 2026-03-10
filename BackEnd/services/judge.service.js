@@ -120,6 +120,20 @@ function handleJudge0Error(error) {
                 status: 'Compilation Error'
             };
         }
+
+        // Validation error (422) - often related to invalid parameters like time_limit
+        if (status === 422) {
+            const message = error.response.data?.message || error.response.data?.error || 'Invalid parameters';
+            console.log('=== JUDGE0 422 ERROR ===');
+            console.log('Response data:', error.response.data);
+            console.log('========================');
+            return {
+                success: false,
+                error: message,
+                errorType: 'validation_error',
+                status: 'System Error'
+            };
+        }
     }
 
     // Unknown error
@@ -138,18 +152,26 @@ function handleJudge0Error(error) {
  * @param {string} language - Programming language
  * @returns {Promise<Object>} - Execution result
  */
-async function runWithJudge0(code, input, language = 'python') {
+async function runWithJudge0(code, input, language = 'python', options = {}) {
     const languageId = getLanguageId(language);
     
+    // Lấy timeLimit từ options (hỗ trợ giới hạn động từ testcase)
+    const timeLimit = options.timeLimit !== undefined ? options.timeLimit : 2;
+    
+    // Chỉ set memory_limit khi được truyền vào, không dùng default
     const payload = {
         source_code: code,
         language_id: languageId,
         stdin: input || '',
         expected_output: null,
-        cpu_time_limit: 2,
-        cpu_extra_time: 1,
-        memory_limit: 128000
+        cpu_time_limit: timeLimit,     // <-- ĐỘNG
+        cpu_extra_time: 1
     };
+    
+    // Chỉ thêm memory_limit khi options.memoryLimit được truyền
+    if (options.memoryLimit !== undefined) {
+        payload.memory_limit = options.memoryLimit;
+    }
 
     let lastError = null;
 
@@ -322,10 +344,11 @@ async function runWithJudge0(code, input, language = 'python') {
  * @param {string} code - User's source code
  * @param {string} input - Input for the code
  * @param {string} language - Programming language
+ * @param {Object} options - Options including timeLimit and memoryLimit
  * @returns {Promise<Object>} - Execution result
  */
-async function runWithYepCode(code, input, language = 'python') {
-    return runWithJudge0(code, input, language);
+async function runWithYepCode(code, input, language = 'python', options = {}) {
+    return runWithJudge0(code, input, language, options);
 }
 
 /**
@@ -485,10 +508,11 @@ async function judgeProblem(problemId, code, userId = null, options = {}) {
  * @param {string} input - Input for the code
  * @param {string} expected - Expected output
  * @param {string} language - Programming language
+ * @param {Object} options - Options including timeLimit and memoryLimit
  * @returns {Promise<Object>} - Single test case result
  */
-async function runSingleTestCase(code, input, expected, language = 'python') {
-    const executionResult = await runWithJudge0(code, input, language);
+async function runSingleTestCase(code, input, expected, language = 'python', options = {}) {
+    const executionResult = await runWithJudge0(code, input, language, options);
 
     let status = 'Wrong Answer';
     let actualOutput = '';

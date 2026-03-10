@@ -48,7 +48,8 @@ const submitCode = async (req, res) => {
                 code,
                 fixedInput,
                 fixedExpected,
-                language
+                language,
+                { timeLimit: 2 }  // Chỉ truyền time limit
             );
             
             return res.json({
@@ -94,13 +95,16 @@ const submitCode = async (req, res) => {
 
         // 2. Get all test cases for the problem
         const testCasesResult = await connection.query`
-            SELECT id, input_data, expected_output, is_hidden 
+             SELECT id, input_data, expected_output, is_hidden, time_limit, memory_limit
             FROM TestCases 
             WHERE problem_id = ${problemId}
             ORDER BY id
         `;
 
         const testCases = testCasesResult.recordset;
+        
+        // Get problem details for fallback values
+        const problem = problemResult.recordset[0];
 
         if (testCases.length === 0) {
             return res.status(400).json({
@@ -137,12 +141,22 @@ const submitCode = async (req, res) => {
             let input = (testCase.input_data || '').replace(/\\n/g, '\n').replace(/\\r/g, '\r');
             const expected = (testCase.expected_output || '').replace(/\\n/g, '\n').replace(/\\r/g, '\r').trim();
             
+            const testCaseTimeLimit = testCase.time_limit !== null && testCase.time_limit !== undefined 
+        ? testCase.time_limit 
+        : (problem.time_limit || 2);  // Mặc định lấy từ problem
+    
+    // Bỏ memory limit - chỉ dùng time limit
+    // const testCaseMemoryLimit = testCase.memory_limit !== null && testCase.memory_limit !== undefined
+    //     ? Math.max(testCase.memory_limit, 2048)
+    //     : Math.max(problem.memory_limit || 256, 2048);
+    
             // Execute code with YepCode
-            const judgeResult = await judgeService.runWithYepCode(
-                code,
-                input,
-                language
-            );
+          const judgeResult = await judgeService.runWithYepCode(
+        code,
+        input,
+        language,
+        { timeLimit: testCaseTimeLimit }  // <-- CHỈ TRUYỀN TIME LIMIT
+    );
 
             let testStatus = 'Wrong Answer';
             let output = '';
